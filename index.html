@@ -42,13 +42,17 @@
 				<th>Nom</td>
 				<th>Prenom</th>
 				<th>Liste cours</th>
+				<th>Cours désiré</th>
+				<th>Mauvaise évaluation</th>
 			</tr>
 			<tr ng-repeat="professeur in professeurs">
 				<td>{{professeur.nom}}</td>
 				<td>{{professeur.prenom}}</td>
 				<td>
-					<span ng-repeat="unCours in professeur.cours">{{unCours}} {{unCours != professeur.cours[professeur.cours.length-1] ? '-':'.'}} </span>
+					<span ng-repeat="unCours in professeur.cours">Sigle:{{unCours.sigle}}, Session:{{unCours.session}}, Groupe:{{unCours.groupe}}, Jour:{{unCours.jour==0?'Lundi':'Autre'}} </br></span>
 				</td>
+				<td>{{professeur.coursDesires[0]}}</td>
+				<td>{{professeur.mauvaiseEvaluation[0]}}</td>
 			</tr>
 		</table>
 		
