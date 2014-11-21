@@ -1,19 +1,27 @@
-var professeur = [
-	//remplir les professeurs
+//require("./csp/");
 
-];
-
-var cours = [
-	//remplir les cours
-
-];
-
-exports.genererListeProfesseur = function() {
-	//Créer la liste des professeurs (Soit import d'un json ou d'une BD)
-}
+var professeur = require('./data/professeur.json');
+var cours = require('./data/cours.json');
 
 exports.genererListeCours = function() {
 	//Créer la liste des cours (Soit import d'un json ou d'une BD)
+}
+
+exports.getProfesseur = function(req, res) {
+	//Professeur
+	var index = parseInt(req.params.id);
+	var unProfesseur = professeur[index];
+	
+	res.send(unProfesseur.nom);
+
+}
+
+exports.getCours = function(req, res) {
+	//Cours
+	var index = parseInt(req.params.id);
+	var unCours = cours[index];
+	
+	res.send(unCours.sigle);
 }
 
 exports.getCSP = function(req, res) {
@@ -22,6 +30,7 @@ exports.getCSP = function(req, res) {
 	CSPjson = {
 		nom:"TEST"
 	}
+	
 	res.send(CSPjson);
 }
 

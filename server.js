@@ -13,9 +13,6 @@ var serveStatic = require("serve-static");
 var favicon = require("serve-favicon");
 var bodyParser = require("body-parser");
 
-generateurHoraire.genererListeProfesseur();
-generateurHoraire.genererListeCours();
-
 var PORT = 3000;
 
 var app = express();
@@ -29,6 +26,8 @@ var api = express();
 // Récupérer la liste des dossiers
 // GET /api/CSP
 api.get("/CSP", generateurHoraire.getCSP);
+api.get("/professeur/:id", generateurHoraire.getProfesseur);
+api.get("/cours/:id", generateurHoraire.getCours);
 
 app.use(bodyParser.json());
 

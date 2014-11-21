@@ -5,4 +5,6 @@ Si message d'erreur, veuillez telecharger les fichiers manquant avec npm
 
 Les requetes disponible
  - /index.html
+ - /api/professeur/:id
+ - /api/cours/:id
  - /api/CSP
