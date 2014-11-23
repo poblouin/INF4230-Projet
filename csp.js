@@ -20,6 +20,7 @@ var prof1 = {
     nom: "Harish Gunnarr",
     cle: "prof1",    // Ceci sera la clé de l'objet dans l'objet assignment... TODO: Faire mieux! :-)
     coursDesires: ["cours1", "cours3", "cours4", "cours5", "cours6"],
+	mauvaiseEvaluation : ["cours2","cours1"],
     nombreCoursDesires: 1,
     nombreCoursAssignes: 0
 };
@@ -28,6 +29,7 @@ var prof2 = {
     nom: "Lucio Benjamin",
     cle: "prof2",
     coursDesires: ["cours1", "cours2", "cours3", "cours4", "cours5"],
+	mauvaiseEvaluation : ["cours2","cours1"],
     nombreCoursDesires: 1,
     nombreCoursAssignes: 0
 };
@@ -36,6 +38,7 @@ var prof3 = {
     nom: "Mickey Hyakinthos",
     cle: "prof3",
     coursDesires: ["cours2", "cours3", "cours4", "cours5", "cours6"],
+	mauvaiseEvaluation : ["cours2"],
     nombreCoursDesires: 1,
     nombreCoursAssignes: 0
 };
@@ -79,7 +82,7 @@ function backtrackingSearch(csp) {
     for (var i = 0; i < domaineProfesseur.length; i++) {
         var cours = domaineProfesseur[i];
 
-        if (isConsistent(cours, assignment)) {
+        if (isConsistent(cours, assignment,professeur)) {
             addAssignment(professeur, cours, assignment);
 
             // TODO: Vérification du 'arc-consistency' ici!
@@ -147,9 +150,9 @@ function removeAssignment(professeur, cours, assignment) {
 // C'est ici qu'on va mettre toutes nos contraintes! Pour commencer, on va juste s'assurer que deux professeurs
 // différents ne donnent pas le même cours. Éventuellement, on pourrait mettre chacunes des contraintes dans sa
 // propre fonction!
-function isConsistent(cours, assignment) {
+function isConsistent(cours, assignment,professeur) {
     if (coursDejaAssigne(cours, assignment)) return false;
-    
+    if (mauvaiseEvaluation(cours,assignment,professeur)) return false;
     // Autres checks de contraintes...
 
     return true;
@@ -166,6 +169,19 @@ function coursDejaAssigne(cours, assignment) {
     }
 
     return false;
+}
+
+// On prend le professeur qui vien de recevoir un cours assigner, puis on verifie
+// que le cours n'est pas dans sa liste de cours ayant une mauvaise evaluation
+function mauvaiseEvaluation (cours, assignment,professeur){
+	for(i = 0; i < professeur.mauvaiseEvaluation.length; i++)
+	{
+		if(cours == professeur.mauvaiseEvaluation[i])
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 // TODO: Une shitload de contraintes!
