@@ -19,8 +19,8 @@
 var prof1 = {
     nom: "Harish Gunnarr",
     cle: "prof1",    // Ceci sera la clé de l'objet dans l'objet assignment... TODO: Faire mieux! :-)
-    coursDesires: ["cours1", "cours3", "cours4", "cours5", "cours6"],
-	mauvaiseEvaluation : ["cours2","cours1"],
+    coursDesires: ["cours1", "cours3"],
+    mauvaiseEvaluation : [],
     nombreCoursDesires: 1,
     nombreCoursAssignes: 0
 };
@@ -28,8 +28,8 @@ var prof1 = {
 var prof2 = {
     nom: "Lucio Benjamin",
     cle: "prof2",
-    coursDesires: ["cours1", "cours2", "cours3", "cours4", "cours5"],
-	mauvaiseEvaluation : ["cours2","cours1"],
+    coursDesires: ["cours2"],
+    mauvaiseEvaluation : [],
     nombreCoursDesires: 1,
     nombreCoursAssignes: 0
 };
@@ -37,8 +37,8 @@ var prof2 = {
 var prof3 = {
     nom: "Mickey Hyakinthos",
     cle: "prof3",
-    coursDesires: ["cours2", "cours3", "cours4", "cours5", "cours6"],
-	mauvaiseEvaluation : ["cours2"],
+    coursDesires: ["cours1"],
+    mauvaiseEvaluation : [],
     nombreCoursDesires: 1,
     nombreCoursAssignes: 0
 };
@@ -76,25 +76,26 @@ function backtrackingSearch(csp) {
 */
 function backtrackingSearch(csp) {
     if (isComplete(csp)) return assignment;
+
     var professeur = selectNextUnassignedVariable(csp);
     var domaineProfesseur = orderDomainValues(professeur, assignment, csp);
+    var result;
 
     for (var i = 0; i < domaineProfesseur.length; i++) {
         var cours = domaineProfesseur[i];
+        var assignmentCopy = JSON.parse(JSON.stringify(assignment));
+        addAssignment(professeur, cours, assignment);
 
-        if (isConsistent(cours, assignment,professeur)) {
-            addAssignment(professeur, cours, assignment);
-
+        if (isConsistent(cours, professeur, assignmentCopy)) {
             // TODO: Vérification du 'arc-consistency' ici!
-
-            var result = backtrackingSearch(csp, assignment);        
-            if (result) return result;            
+            var result = backtrackingSearch(csp, assignment);     
+            if (result) break;           
         }
 
-        //removeAssignment(professeur, cours, assignment);
+        removeAssignment(professeur, cours, assignment);
     }
 
-    return undefined;
+    return result;
 }
 
 // Cette fonction retourne la liste des cours assignables à un professeur. C'est ici qu'on devra ajouter
@@ -150,9 +151,9 @@ function removeAssignment(professeur, cours, assignment) {
 // C'est ici qu'on va mettre toutes nos contraintes! Pour commencer, on va juste s'assurer que deux professeurs
 // différents ne donnent pas le même cours. Éventuellement, on pourrait mettre chacunes des contraintes dans sa
 // propre fonction!
-function isConsistent(cours, assignment,professeur) {
+function isConsistent(cours, professeur, assignment) {
     if (coursDejaAssigne(cours, assignment)) return false;
-    if (mauvaiseEvaluation(cours,assignment,professeur)) return false;
+    if (mauvaiseEvaluation(cours, professeur, assignment)) return false;
     // Autres checks de contraintes...
 
     return true;
@@ -173,7 +174,7 @@ function coursDejaAssigne(cours, assignment) {
 
 // On prend le professeur qui vien de recevoir un cours assigner, puis on verifie
 // que le cours n'est pas dans sa liste de cours ayant une mauvaise evaluation
-function mauvaiseEvaluation (cours, assignment,professeur){
+function mauvaiseEvaluation (cours, professeur, assignment){
 	for(i = 0; i < professeur.mauvaiseEvaluation.length; i++)
 	{
 		if(cours == professeur.mauvaiseEvaluation[i])
@@ -184,9 +185,10 @@ function mauvaiseEvaluation (cours, assignment,professeur){
 	return false;
 }
 
+
 // TODO: Une shitload de contraintes!
 
 // Tests! 
-//debugger;
-//var test = backtrackingSearch(csp);
-//console.log(test);
+debugger;
+var test = backtrackingSearch(csp);
+console.log(test);
