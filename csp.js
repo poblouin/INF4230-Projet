@@ -171,16 +171,29 @@ function isComplete(csp) {
 }
 
 // Va retourner la prochaine variable (professeur) qui n'est pas complètement assignée. 
+// Heuristique ajoutee : on selectionne le prof avec le moins de cours desires en premier.
+// Cependant, je ne suis pas sur du nombre de niveau ? j'ai prit pour acquis que 
+// quand niveau = 1 , alors c'est le directeur.
 function selectNextUnassignedVariable(csp) {
     var professeurs = csp["professeurs"];
-
-    for (var i = 0; i < professeurs.length; i++) {
+	var plusCourtNbrCours = 9999;
+	var profAAssigner = undefined;
+	for (var i = 0; i < professeurs.length; i++) {
         var professeur = professeurs[i];
-        // Ceci va devoir être modifié lorsqu'on va permettre les professeurs d'avoir plus d'un cours...
-        if (professeur["nombreCoursAssignes"] < professeur["nombreCoursDesires"]) return professeur;
+		var longueur = professeur.coursDesires.length;
+		// Il s'agit du directeur et qu'il y a des cours, alors il est le premier a choisir.
+		// On peux quitter la boucle et le retourner.
+		if(professeur.niveau == 1 && professeur.nombreCoursAssignes < professeur.nombreCoursDesires){
+			profAAssigner = professeur;
+			break;
+		}
+		else if(longueur < plusCourtNbrCours && professeur.nombreCoursAssignes < professeur.nombreCoursDesires){
+			plusCourtNbrCours = longueur;
+			profAAssigner = professeur;
+		}
+		
     }
-
-    return undefined;
+	return profAAssigner;
 }
 
 // Ces fonctions servent à assigner/désassigner un cours à un professeur. Éventuellement, il faudrait vérifier si
