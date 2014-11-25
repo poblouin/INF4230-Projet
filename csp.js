@@ -12,71 +12,117 @@
 // - Dans l'objet 'csp', l'ordre de la liste des professeurs est significative. Le professeur en
 //   position 0 va avoir ses cours avant celui à la position 1. Éventuellement, on pourrait utiliser
 //   un ordre qui place les directeurs en premier, suivis des coordonateurs puis des professeurs...
-
+//
+// =====================================================================================
 // Section des données: Ceci est temporaire! Ces données seront éventuellement ailleurs!
-
-// La liste 'coursDesires' est ordonnée. Le professeur préfère le cours de l'indice 0 à celui de l'indice 1...
-var prof1 = {
-    nom: "Harish Gunnarr",
-    cle: "prof1",    // Ceci sera la clé de l'objet dans l'objet assignment... TODO: Faire mieux! :-)
-    coursDesires: ["cours1", "cours3"],
-    mauvaiseEvaluation : [],
-    nombreCoursDesires: 1,
-    nombreCoursAssignes: 0
-};
-
-var prof2 = {
-    nom: "Lucio Benjamin",
-    cle: "prof2",
-    coursDesires: ["cours2"],
-    mauvaiseEvaluation : [],
-    nombreCoursDesires: 1,
-    nombreCoursAssignes: 0
-};
-
-var prof3 = {
-    nom: "Mickey Hyakinthos",
-    cle: "prof3",
-    coursDesires: ["cours1"],
-    mauvaiseEvaluation : [],
-    nombreCoursDesires: 1,
-    nombreCoursAssignes: 0
-};
-
-// Objet qui représente le problème simplifié -- Devra être généré automatiquement!
+// =====================================================================================
+//
+// Nouveau format de l'objet CSP, qui est une définition formelle du problème. L'avantage d'avoir
+// toutes les définitions à l'intérieur de l'objet est qu'il sera maintenant possible d'avoir des
+// fichier JSON qui vont correspondre à un 'problem set'. On aura juste à loader ces fichiers au
+// lieu de devoir définir nos éléments dans le code. De plus, ça va justifier l'utilisation de 
+// Node.js, car on aurait pas pu ouvrir des fichiers si on restait 'front-end'! :-)
+//
+// Information sur les objets de cours :
+// Jours - 0: Lundi, 1: Mardi, 2: Mercredi, 3: Jeudi, 4: Vendredi
+// Périodes - 0: Avant-midi, 1: Après-midi, 2: Soir
+// Est-ce qu'on devrait faire mieux? (utiliser des strings?)
 var csp = {
-    // Professeurs à qui on doit assigner des cours
-    professeurs: [prof1, prof2, prof3],
-    // Pour simplifier, on utilise des 'strings' pour représenter des cours. Éventuellement, on va
-    // plutôt utiliser des objets 'Cours', qui vont contenir plus d'information (horaire, etc)
-    coursDisponibles: ["cours1", "cours2", "cours3", "cours4", "cours5", "cours6"]
+    professeurs: [
+        {
+            id: "prof1",
+            nom: "Harish Gunnarr",
+            coursDesires: ["inf1120-00", "inf3105-10"],
+            niveau: 0,
+            mauvaiseEvaluation : [],
+            nombreCoursDesires: 1,
+            nombreCoursAssignes: 0
+        },
+        {
+            id: "prof2",
+            nom: "Lucio Benjamin",
+            coursDesires: ["inf2120-00"],
+            niveau: 0,
+            mauvaiseEvaluation : [],
+            nombreCoursDesires: 1,
+            nombreCoursAssignes: 0
+        },
+        {
+            id: "prof3",
+            nom: "Mickey Hyakinthos",
+            coursDesires: ["inf1120-00"],
+            niveau: 0,
+            mauvaiseEvaluation : [],
+            nombreCoursDesires: 1,
+            nombreCoursAssignes: 0
+        }
+    ],
+    coursDisponibles: [
+        {
+            id: "inf1120-00",
+	        sigle: "INF1120",
+	        jour: 0,
+	        periode: 0
+        },
+        {
+            id: "inf1220-00",
+	        sigle: "INF2120",
+	        jour: 0,
+	        periode: 0
+        },
+        {
+            id: "inf3105-10",
+	        sigle: "INF3105",
+	        jour: 1,
+	        periode: 0
+        },
+        {
+            id: "inf5000-22",
+	        sigle: "INF5000",
+	        jour: 2,
+	        periode: 2
+        },
+        {
+            id: "inf4230-00",
+	        sigle: "INF4230",
+	        jour: 4,
+	        periode: 2
+        }
+    ]
 };
 
-// Puisque l'ordre des professeurs dans l'objet 'csp' est significatif, la solution à ce problème 
-// simple devra être: prof1 -> cours1, prof2 -> cours2, prof3 -> cours3
-
-// Structure d'un objet 'assignment' (résolution en cours du problème). Ceci devra éventuellement s'initialiser
-// et se mettre à jour de façon automatique. On pourrait l'initialiser avec les listes des professeurs/cours afin
-// qu'il se génère tout seul. En gros, ça devrait être une fonction constructeur plutôt qu'un objet.
-var assignment = {
-    prof1: [], // Ceci est une liste parce qu'éventuellement, on va assigner plus d'un cours par prof si désiré!
-    prof2: [],
-    prof3: []
-};
-
+// =================================================
+// Section des algorithmes: Cette section va rester!
+// =================================================
+//
 // Implémentation de 'Backtracking Search' récursif
 // TODO:
 //   - Ajouter les heuristiques
 //   - Ajouter le arc-consistency (fonction 'inference')
-//   - Transformer ça en algo itératif (si c'est trop lent)
-/*
-function backtrackingSearch(csp) {
-    return backtrackingSeach(csp, assignment);
-}
-*/
-function backtrackingSearch(csp) {
-    if (isComplete(csp)) return assignment;
+//   - Transformer ça en algo itératif (si c'est trop lent!)
+//
+// Structure d'un objet 'assignment' (résolution en cours du problème):
+// var assignment = {
+//    prof1: [], // Ceci est une liste parce qu'éventuellement, on va assigner plus d'un cours par prof si désiré!
+//    prof2: [],
+//    prof3: []
+//};
+function search(csp) {
+    // On génère un objet 'assignment' selon les données du problèmes.
+    var assignment = {};
+    var professeurs = csp["professeurs"];
 
+    for (var i = 0; i < professeurs.length; i++) {
+        var professeur = professeurs[i]["id"];
+        assignment[professeur] = [];
+    }
+
+    return backtrackingSearch(csp, assignment);
+}
+
+function backtrackingSearch(csp, assignment) {
+    if (isComplete(csp)) return assignment;
+    
     var professeur = selectNextUnassignedVariable(csp);
     var domaineProfesseur = orderDomainValues(professeur, assignment, csp);
     var result;
@@ -84,6 +130,7 @@ function backtrackingSearch(csp) {
     for (var i = 0; i < domaineProfesseur.length; i++) {
         var cours = domaineProfesseur[i];
         var assignmentCopy = JSON.parse(JSON.stringify(assignment));
+        
         addAssignment(professeur, cours, assignment);
 
         if (isConsistent(cours, professeur, assignmentCopy)) {
@@ -92,7 +139,7 @@ function backtrackingSearch(csp) {
             if (result) break;           
         }
 
-        removeAssignment(professeur, cours, assignment);
+        removeAssignment(professeur, cours, assignment);    
     }
 
     return result;
@@ -103,18 +150,18 @@ function backtrackingSearch(csp) {
 // on va pouvoir éliminer des valeurs possibles du domaine. Pour l'instant, on retourne juste la liste de
 // cours désirés par le professeurs.
 function orderDomainValues(professeur, assignment, csp) {
-    return professeur.coursDesires;
+    return professeur["coursDesires"];
 }
 
 // Retourne si un professeur a une assignation complète.
 function isAssigned(professeur) {
-    return professeur.nombreCoursAssignes == professeur.nombreCoursDesires;
+    return professeur["nombreCoursAssignes"] == professeur["nombreCoursDesires"];
 }
 
 // Un 'assignment' est complet si chacun des professeurs a un cours assigné. Ceci est construit de façon à
 // pouvoir permettre un nombre illimité de professeurs.
 function isComplete(csp) {
-    var professeurs = csp.professeurs;
+    var professeurs = csp["professeurs"];
 
     for (var i = 0; i < professeurs.length; i++) {
         if (!isAssigned(professeurs[i])) return false;
@@ -125,11 +172,12 @@ function isComplete(csp) {
 
 // Va retourner la prochaine variable (professeur) qui n'est pas complètement assignée. 
 function selectNextUnassignedVariable(csp) {
-    var professeurs = csp.professeurs;
+    var professeurs = csp["professeurs"];
 
     for (var i = 0; i < professeurs.length; i++) {
         var professeur = professeurs[i];
-        if (professeur.nombreCoursAssignes < professeur.nombreCoursDesires) return professeur;
+        // Ceci va devoir être modifié lorsqu'on va permettre les professeurs d'avoir plus d'un cours...
+        if (professeur["nombreCoursAssignes"] < professeur["nombreCoursDesires"]) return professeur;
     }
 
     return undefined;
@@ -138,14 +186,36 @@ function selectNextUnassignedVariable(csp) {
 // Ces fonctions servent à assigner/désassigner un cours à un professeur. Éventuellement, il faudrait vérifier si
 // le professeur et le cours existent sinon on garoche une exception!
 function addAssignment(professeur, cours, assignment) {
-    professeur.nombreCoursAssignes++;
-    assignment[professeur.cle].push(cours);
+    professeur["nombreCoursAssignes"]++;
+    assignment[professeur.id].push(cours);
 }
 
 function removeAssignment(professeur, cours, assignment) {
-    professeur.nombreCoursAssignes--;
-    var professeur = assignment[professeur.cle];
+    professeur["nombreCoursAssignes"]--;
+    var professeur = assignment[professeur.id];
     professeur.splice(professeur.indexOf(cours), 1);
+}
+
+// Recherche d'un professeur par son 'id'
+function getProfesseurById(csp, id) {
+    var professeurs = csp["professeurs"];
+
+    for (var i = 0; i < professeurs.length; i++) {
+        if (professeurs[i].id === id) return professeurs[i];    
+    }
+
+    return undefined;
+}
+
+// Recherche d'un cours par son 'id'
+function getCoursById(csp, id) {
+    var cours = csp["coursDisponibles"];
+
+    for (var i = 0; i < cours.length; i++) {
+        if (cours[i].id === id) return cours[i];    
+    }
+
+    return undefined;
 }
 
 // C'est ici qu'on va mettre toutes nos contraintes! Pour commencer, on va juste s'assurer que deux professeurs
@@ -154,6 +224,7 @@ function removeAssignment(professeur, cours, assignment) {
 function isConsistent(cours, professeur, assignment) {
     if (coursDejaAssigne(cours, assignment)) return false;
     if (mauvaiseEvaluation(cours, professeur, assignment)) return false;
+    
     // Autres checks de contraintes...
 
     return true;
@@ -185,10 +256,9 @@ function mauvaiseEvaluation (cours, professeur, assignment){
 	return false;
 }
 
-
 // TODO: Une shitload de contraintes!
 
-// Tests! 
-debugger;
-var test = backtrackingSearch(csp);
+// Tests!
+//debugger;
+var test = search(csp);
 console.log(test);
