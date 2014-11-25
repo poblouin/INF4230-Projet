@@ -65,7 +65,7 @@ var csp = {
 	        periode: 0
         },
         {
-            id: "inf1220-00",
+            id: "inf2120-00",
 	        sigle: "INF2120",
 	        jour: 0,
 	        periode: 0
@@ -126,12 +126,12 @@ function backtrackingSearch(csp, assignment) {
     var professeur = selectNextUnassignedVariable(csp);
     var domaineProfesseur = orderDomainValues(professeur, assignment, csp);
     var result;
-
+    
     for (var i = 0; i < domaineProfesseur.length; i++) {
-        var cours = domaineProfesseur[i];
+        var cours = getCoursById(csp, domaineProfesseur[i]);
         var assignmentCopy = JSON.parse(JSON.stringify(assignment));
         
-        addAssignment(professeur, cours, assignment);
+        addAssignment(professeur, cours["id"], assignment);
 
         if (isConsistent(cours, professeur, assignmentCopy)) {
             // TODO: Vérification du 'arc-consistency' ici!
@@ -204,7 +204,7 @@ function getProfesseurById(csp, id) {
         if (professeurs[i].id === id) return professeurs[i];    
     }
 
-    return undefined;
+    throw "Le professeur ayant l'identifiant " + id + " n'existe pas!";
 }
 
 // Recherche d'un cours par son 'id'
@@ -215,7 +215,7 @@ function getCoursById(csp, id) {
         if (cours[i].id === id) return cours[i];    
     }
 
-    return undefined;
+    throw "Le cours ayant l'identifiant " + id + " n'existe pas!";
 }
 
 // C'est ici qu'on va mettre toutes nos contraintes! Pour commencer, on va juste s'assurer que deux professeurs
@@ -224,7 +224,8 @@ function getCoursById(csp, id) {
 function isConsistent(cours, professeur, assignment) {
     if (coursDejaAssigne(cours, assignment)) return false;
     if (mauvaiseEvaluation(cours, professeur, assignment)) return false;
-    
+    if (plageDejaAssignee(cours, professeur, assignment)) return false;    
+
     // Autres checks de contraintes...
 
     return true;
@@ -236,8 +237,21 @@ function isConsistent(cours, professeur, assignment) {
 function coursDejaAssigne(cours, assignment) {
     for (var property in assignment) {
         if (assignment.hasOwnProperty(property)) {
-            if (assignment[property].indexOf(cours) != -1) return true;
+            if (assignment[property].indexOf(cours.id) != -1) return true;
         }
+    }
+
+    return false;
+}
+
+// Est-ce que l'horaire du professeur permet l'ajout du cours?
+// Ceci ne sera utilisé que quand il sera possible d'avoir plus qu'un cours par professeur...
+function plageDejaAssignee(cours, professeur, assignment) {
+    var coursDonnes = assignment[professeur.id];
+    
+    for (var i = 0; i < coursDonnes.length; i++) {
+        var coursDonne = getCoursById(csp, coursDonnes[i]);
+        if (coursDonne["jour"] == cours["jour"] && coursDonne["periode"] == cours["periode"]) return true;
     }
 
     return false;
@@ -245,20 +259,17 @@ function coursDejaAssigne(cours, assignment) {
 
 // On prend le professeur qui vien de recevoir un cours assigner, puis on verifie
 // que le cours n'est pas dans sa liste de cours ayant une mauvaise evaluation
-function mauvaiseEvaluation (cours, professeur, assignment){
-	for(i = 0; i < professeur.mauvaiseEvaluation.length; i++)
-	{
-		if(cours == professeur.mauvaiseEvaluation[i])
-		{
-			return true;
-		}
-	}
-	return false;
+function mauvaiseEvaluation(cours, professeur, assignment) {
+    for (i = 0; i < professeur["mauvaiseEvaluation"].length; i++) {
+        if (cours["id"] == professeur["mauvaiseEvaluation"][i]) return true;
+    }
+
+    return false;
 }
 
 // TODO: Une shitload de contraintes!
 
 // Tests!
-//debugger;
+debugger;
 var test = search(csp);
 console.log(test);
