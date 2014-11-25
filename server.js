@@ -23,9 +23,9 @@ app.use(serveStatic(__dirname + "/app"));
 
 var api = express();
 
-// Récupérer la liste des dossiers
-// GET /api/CSP
+//Les services offerts
 api.get("/CSP", generateurHoraire.getCSP);
+api.get("/professeurs", generateurHoraire.getProfesseurs);
 api.get("/professeur/:id", generateurHoraire.getProfesseur);
 api.get("/cours/:id", generateurHoraire.getCours);
 

@@ -1,8 +1,29 @@
 [
 	{
-		"nom":"Eric beaudry"
+		"id": "prof1",
+		"nom": "Harish Gunnarr",
+		"coursDesires": ["inf1120-00", "inf3105-10"],
+		"niveau": 0,
+		"mauvaiseEvaluation" : [],
+		"nombreCoursDesires": 1,
+		"nombreCoursAssignes": 0
 	},
 	{
-		"nom":"Un autre professeur"
+		"id": "prof2",
+		"nom": "Lucio Benjamin",
+		"coursDesires": ["inf2120-00"],
+		"niveau": 0,
+		"mauvaiseEvaluation" : [],
+		"nombreCoursDesires": 1,
+		"nombreCoursAssignes": 0
+	},
+	{
+		"id": "prof3",
+		"nom": "Mickey Hyakinthos",
+		"coursDesires": ["inf1120-00"],
+		"niveau": 0,
+		"mauvaiseEvaluation" : [],
+		"nombreCoursDesires": 1,
+		"nombreCoursAssignes": 0
 	}
 ]

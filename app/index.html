@@ -39,35 +39,28 @@
 	<div class="container">
 		<table class="table table-bordered" >
 			<tr>
-				<th>Nom</td>
-				<th>Prenom</th>
+				<th>Professeur</td>
 				<th>Liste cours</th>
 				<th>Cours désiré</th>
 				<th>Mauvaise évaluation</th>
 			</tr>
 			<tr ng-repeat="professeur in professeurs">
 				<td>{{professeur.nom}}</td>
-				<td>{{professeur.prenom}}</td>
 				<td>
 					<span ng-repeat="unCours in professeur.cours">Sigle:{{unCours.sigle}}, Session:{{unCours.session}}, Groupe:{{unCours.groupe}}, Jour:{{unCours.jour==0?'Lundi':'Autre'}} </br></span>
 				</td>
-				<td>{{professeur.coursDesires[0]}}</td>
-				<td>{{professeur.mauvaiseEvaluation[0]}}</td>
+				<td>
+					<span ng-repeat="unCoursDesire in professeur.coursDesires">{{unCoursDesire}}{{$last ? ".":", "}}</span>
+				</td>
+				<td>
+					<span ng-repeat="coursMauvaiseEval in professeur.mauvaiseEvaluation">{{coursMauvaiseEval}}{{$last ? ".":", "}}</span>
+				</td>
 			</tr>
 		</table>
 		
-		<input ng-model="professeurs[0].nom"></input>
+		<button ng-click="generer();">Générer l'assignation</button>
 		
-		<!--
-		<div class="row">
-		  <div class="col-md-3">Nom</div>
-		  <div class="col-md-3">Prenom</div>
-		</div>
-		<div class="row" ng-repeat="professeur in professeurs">
-		  <div class="col-md-3">{{professeur.nom}}</div>
-		  <div class="col-md-3">{{professeur.prenom}}</div>
-		</div>
-		-->
+		<div>{{grilleHoraire}}</div>
 	</div>
 		
 		<script src="bower_components/js/jquery-1.11.1.min.js"></script>

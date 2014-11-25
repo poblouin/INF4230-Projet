@@ -1,7 +1,32 @@
 [
 	{
-		"sigle":"INF3100"
-	},{
-		"sigle":"INF4230"
+		"id": "inf1120-00",
+		"sigle": "INF1120",
+		"jour": 0,
+		"periode": 0
+	},
+	{
+		"id": "inf2120-00",
+		"sigle": "INF2120",
+		"jour": 0,
+		"periode": 0
+	},
+	{
+		"id": "inf3105-10",
+		"sigle": "INF3105",
+		"jour": 1,
+		"periode": 0
+	},
+	{
+		"id": "inf5000-22",
+		"sigle": "INF5000",
+		"jour": 2,
+		"periode": 2
+	},
+	{
+		"id": "inf4230-00",
+		"sigle": "INF4230",
+		"jour": 4,
+		"periode": 2
 	}
 ]

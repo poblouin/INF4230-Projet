@@ -7,6 +7,7 @@ Pour debug : npm install -g node-inspector apres npm-debug server.js
 
 Les requetes disponible
  - /index.html
+ - /api/professeurs
  - /api/professeur/:id
  - /api/cours/:id
  - /api/CSP
