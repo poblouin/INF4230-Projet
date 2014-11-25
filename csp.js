@@ -48,19 +48,19 @@ var csp = {
     {
         id: "prof1",
         nom: "Harish Gunnarr",
-        coursDesires: ["inf1120-00", "inf3105-10"],
+        coursDesires: ["inf1120-00", "inf3105-10", "inf4230-00", "inf5000-22", "inf2120-00"],
         niveau: CHARGE_DE_COURS,
         mauvaiseEvaluation : [],
-        nombreCoursDesires: 1,
+        nombreCoursDesires: 2,
         nombreCoursAssignes: 0
     },
     {
         id: "prof2",
         nom: "Lucio Benjamin",
-        coursDesires: ["inf2120-00"],
+        coursDesires: ["inf2120-00", "inf3105-10"],
         niveau: PROFESSEUR,
         mauvaiseEvaluation : [],
-        nombreCoursDesires: 1,
+        nombreCoursDesires: 2,
         nombreCoursAssignes: 0
     },
     {
