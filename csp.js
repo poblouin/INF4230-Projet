@@ -26,69 +26,84 @@
 // Information sur les objets de cours :
 // Jours - "lundi", "mardi", "mercredi", "jeudi", "vendredi"
 // Périodes - "AM", "PM", "SOIR"
-// Niveau - "directeur", "professeur", "chargé de cours"
+// Niveau - 3 : "directeur", 2 : "professeur", 1 : "chargé de cours". directeur > professeur > chargé de cours
 // Est-ce qu'on devrait faire mieux? (utiliser des strings?) Je crois que des Strings vont apporter moins de confusion..
+//
+// =====================================================================================
+//                      Contraintes actuellement implémentées
+// =====================================================================================
+// - Un cours peut être assigné seulement une fois.
+// - Un professeur ne peut pas donner 2 cours durant la même plage horaire.
+// - Un professeur qui a une mauvaise évaluation pour le cours X, ne peut pas donner le cours X.
+// - Le directeur a priorité sur tout.
+// - Un professeur a priorité sur un chargé de cours.
+
+// Plus simple des int pour l'heuristique.
+var DIRECTEUR = 3,
+PROFESSEUR = 2,
+CHARGE_DE_COURS = 1;
+
 var csp = {
     professeurs: [
-        {
-            id: "prof1",
-            nom: "Harish Gunnarr",
-            coursDesires: ["inf1120-00", "inf3105-10"],
-            niveau: "chargé de cours",
-            mauvaiseEvaluation : [],
-            nombreCoursDesires: 1,
-            nombreCoursAssignes: 0
-        },
-        {
-            id: "prof2",
-            nom: "Lucio Benjamin",
-            coursDesires: ["inf2120-00"],
-            niveau: "professeur",
-            mauvaiseEvaluation : [],
-            nombreCoursDesires: 1,
-            nombreCoursAssignes: 0
-        },
-        {
-            id: "prof3",
-            nom: "Mickey Hyakinthos",
-            coursDesires: ["inf1120-00"],
-            niveau: "professeur",
-            mauvaiseEvaluation : [],
-            nombreCoursDesires: 1,
-            nombreCoursAssignes: 0
-        }
+    {
+        id: "prof1",
+        nom: "Harish Gunnarr",
+        coursDesires: ["inf1120-00", "inf3105-10"],
+        niveau: CHARGE_DE_COURS,
+        mauvaiseEvaluation : [],
+        nombreCoursDesires: 1,
+        nombreCoursAssignes: 0
+    },
+    {
+        id: "prof2",
+        nom: "Lucio Benjamin",
+        coursDesires: ["inf2120-00"],
+        niveau: PROFESSEUR,
+        mauvaiseEvaluation : [],
+        nombreCoursDesires: 1,
+        nombreCoursAssignes: 0
+    },
+    {
+        id: "prof3",
+        nom: "Mickey Hyakinthos",
+        coursDesires: ["inf1120-00"],
+        niveau: PROFESSEUR,
+        mauvaiseEvaluation : [],
+        nombreCoursDesires: 1,
+        nombreCoursAssignes: 0
+    }
     ],
     coursDisponibles: [
-        {
-            id: "inf1120-00",
-	        sigle: "INF1120",
-	        jour: "lundi",
-	        periode: "AM"
-        },
-        {
-            id: "inf2120-00",
-	        sigle: "INF2120",
-	        jour: "lundi",
-	        periode: "AM"
-        },
-        {
-            id: "inf3105-10",
-	        sigle: "INF3105",
-	        jour: "mardi",
-	        periode: "AM"
-        },
-        {
-            id: "inf5000-22",
-	        sigle: "INF5000",
-	        jour: "mercredi",
-	        periode: "SOIR"
-        },
-        {
-            id: "inf4230-00",
-	        sigle: "INF4230",
-	        jour: "vendredi",
-	        periode: "SOIR"
-        }
+    {
+        id: "inf1120-00",
+        sigle: "INF1120",
+        jour: "lundi",
+        periode: "AM"
+    },
+    {
+        id: "inf2120-00",
+        sigle: "INF2120",
+        jour: "lundi",
+        periode: "AM"
+    },
+    {
+        id: "inf3105-10",
+        sigle: "INF3105",
+        jour: "mardi",
+        periode: "AM"
+    },
+    {
+        id: "inf5000-22",
+        sigle: "INF5000",
+        jour: "mercredi",
+        periode: "SOIR"
+    },
+    {
+        id: "inf4230-00",
+        sigle: "INF4230",
+        jour: "vendredi",
+        periode: "SOIR"
+    }
     ]
 };
 
@@ -175,24 +190,26 @@ function isComplete(csp) {
 // Heuristique ajoutee : on selectionne le prof avec le moins de cours desires en premier.
 function selectNextUnassignedVariable(csp) {
     var professeurs = csp["professeurs"];
-	var plusCourtNbrCours = Infinity;
-	var profAAssigner = undefined;
-	for (var i = 0; i < professeurs.length; i++) {
+    var plusCourtNbrCours = Infinity;
+    var niveauActuel = -Infinity;
+    var profAAssigner = undefined;
+    for (var i = 0; i < professeurs.length; i++) {
         var professeur = professeurs[i];
-		var longueur = professeur.coursDesires.length;
-		// Il s'agit du directeur et qu'il y a des cours, alors il est le premier a choisir.
-		// On peux quitter la boucle et le retourner.
-		if(professeur.niveau == "directeur" && professeur.nombreCoursAssignes < professeur.nombreCoursDesires){
-			profAAssigner = professeur;
-			break;
-		}
-		else if(longueur < plusCourtNbrCours && professeur.nombreCoursAssignes < professeur.nombreCoursDesires){
-			plusCourtNbrCours = longueur;
-			profAAssigner = professeur;
-		}
+        var longueur = professeur.coursDesires.length;
 
+        if (niveauActuel < professeur.niveau && professeur.nombreCoursAssignes < professeur.nombreCoursDesires) {
+            if (professeur.niveau == DIRECTEUR) {
+                profAAssigner = professeur;
+                break;
+            }
+            else if(longueur < plusCourtNbrCours) {
+                niveauActuel = professeur.niveau;
+                plusCourtNbrCours = longueur;
+                profAAssigner = professeur;
+            }
+        }
     }
-	return profAAssigner;
+    return profAAssigner;
 }
 
 // Ces fonctions servent à assigner/désassigner un cours à un professeur. Éventuellement, il faudrait vérifier si
@@ -287,6 +304,6 @@ var test = search(csp);
 console.log(test);
 
 exports.search = function (cspSend){
-	console.log(cspSend);
-	return search(cspSend);
+    console.log(cspSend);
+    return search(cspSend);
 }
