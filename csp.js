@@ -20,20 +20,21 @@
 // Nouveau format de l'objet CSP, qui est une définition formelle du problème. L'avantage d'avoir
 // toutes les définitions à l'intérieur de l'objet est qu'il sera maintenant possible d'avoir des
 // fichier JSON qui vont correspondre à un 'problem set'. On aura juste à loader ces fichiers au
-// lieu de devoir définir nos éléments dans le code. De plus, ça va justifier l'utilisation de 
+// lieu de devoir définir nos éléments dans le code. De plus, ça va justifier l'utilisation de
 // Node.js, car on aurait pas pu ouvrir des fichiers si on restait 'front-end'! :-)
 //
 // Information sur les objets de cours :
-// Jours - 0: Lundi, 1: Mardi, 2: Mercredi, 3: Jeudi, 4: Vendredi
-// Périodes - 0: Avant-midi, 1: Après-midi, 2: Soir
-// Est-ce qu'on devrait faire mieux? (utiliser des strings?)
+// Jours - "lundi", "mardi", "mercredi", "jeudi", "vendredi"
+// Périodes - "AM", "PM", "SOIR"
+// Niveau - "directeur", "professeur", "chargé de cours"
+// Est-ce qu'on devrait faire mieux? (utiliser des strings?) Je crois que des Strings vont apporter moins de confusion..
 var csp = {
     professeurs: [
         {
             id: "prof1",
             nom: "Harish Gunnarr",
             coursDesires: ["inf1120-00", "inf3105-10"],
-            niveau: 0,
+            niveau: "chargé de cours",
             mauvaiseEvaluation : [],
             nombreCoursDesires: 1,
             nombreCoursAssignes: 0
@@ -42,7 +43,7 @@ var csp = {
             id: "prof2",
             nom: "Lucio Benjamin",
             coursDesires: ["inf2120-00"],
-            niveau: 0,
+            niveau: "professeur",
             mauvaiseEvaluation : [],
             nombreCoursDesires: 1,
             nombreCoursAssignes: 0
@@ -51,7 +52,7 @@ var csp = {
             id: "prof3",
             nom: "Mickey Hyakinthos",
             coursDesires: ["inf1120-00"],
-            niveau: 0,
+            niveau: "professeur",
             mauvaiseEvaluation : [],
             nombreCoursDesires: 1,
             nombreCoursAssignes: 0
@@ -61,32 +62,32 @@ var csp = {
         {
             id: "inf1120-00",
 	        sigle: "INF1120",
-	        jour: 0,
-	        periode: 0
+	        jour: "lundi",
+	        periode: "AM"
         },
         {
             id: "inf2120-00",
 	        sigle: "INF2120",
-	        jour: 0,
-	        periode: 0
+	        jour: "lundi",
+	        periode: "AM"
         },
         {
             id: "inf3105-10",
 	        sigle: "INF3105",
-	        jour: 1,
-	        periode: 0
+	        jour: "mardi",
+	        periode: "AM"
         },
         {
             id: "inf5000-22",
 	        sigle: "INF5000",
-	        jour: 2,
-	        periode: 2
+	        jour: "mercredi",
+	        periode: "SOIR"
         },
         {
             id: "inf4230-00",
 	        sigle: "INF4230",
-	        jour: 4,
-	        periode: 2
+	        jour: "vendredi",
+	        periode: "SOIR"
         }
     ]
 };
@@ -122,24 +123,24 @@ function search(csp) {
 
 function backtrackingSearch(csp, assignment) {
     if (isComplete(csp)) return assignment;
-    
+
     var professeur = selectNextUnassignedVariable(csp);
     var domaineProfesseur = orderDomainValues(professeur, assignment, csp);
     var result;
-    
+
     for (var i = 0; i < domaineProfesseur.length; i++) {
         var cours = getCoursById(csp, domaineProfesseur[i]);
         var assignmentCopy = JSON.parse(JSON.stringify(assignment));
-        
+
         addAssignment(professeur, cours["id"], assignment);
 
         if (isConsistent(cours, professeur, assignmentCopy)) {
             // TODO: Vérification du 'arc-consistency' ici!
-            var result = backtrackingSearch(csp, assignment);     
-            if (result) break;           
+            var result = backtrackingSearch(csp, assignment);
+            if (result) break;
         }
 
-        removeAssignment(professeur, cours, assignment);    
+        removeAssignment(professeur, cours, assignment);
     }
 
     return result;
@@ -170,20 +171,18 @@ function isComplete(csp) {
     return true;
 }
 
-// Va retourner la prochaine variable (professeur) qui n'est pas complètement assignée. 
+// Va retourner la prochaine variable (professeur) qui n'est pas complètement assignée.
 // Heuristique ajoutee : on selectionne le prof avec le moins de cours desires en premier.
-// Cependant, je ne suis pas sur du nombre de niveau ? j'ai prit pour acquis que 
-// quand niveau = 1 , alors c'est le directeur.
 function selectNextUnassignedVariable(csp) {
     var professeurs = csp["professeurs"];
-	var plusCourtNbrCours = 9999;
+	var plusCourtNbrCours = Infinity;
 	var profAAssigner = undefined;
 	for (var i = 0; i < professeurs.length; i++) {
         var professeur = professeurs[i];
 		var longueur = professeur.coursDesires.length;
 		// Il s'agit du directeur et qu'il y a des cours, alors il est le premier a choisir.
 		// On peux quitter la boucle et le retourner.
-		if(professeur.niveau == 1 && professeur.nombreCoursAssignes < professeur.nombreCoursDesires){
+		if(professeur.niveau == "directeur" && professeur.nombreCoursAssignes < professeur.nombreCoursDesires){
 			profAAssigner = professeur;
 			break;
 		}
@@ -191,7 +190,7 @@ function selectNextUnassignedVariable(csp) {
 			plusCourtNbrCours = longueur;
 			profAAssigner = professeur;
 		}
-		
+
     }
 	return profAAssigner;
 }
@@ -214,7 +213,7 @@ function getProfesseurById(csp, id) {
     var professeurs = csp["professeurs"];
 
     for (var i = 0; i < professeurs.length; i++) {
-        if (professeurs[i].id === id) return professeurs[i];    
+        if (professeurs[i].id === id) return professeurs[i];
     }
 
     throw "Le professeur ayant l'identifiant " + id + " n'existe pas!";
@@ -225,7 +224,7 @@ function getCoursById(csp, id) {
     var cours = csp["coursDisponibles"];
 
     for (var i = 0; i < cours.length; i++) {
-        if (cours[i].id === id) return cours[i];    
+        if (cours[i].id === id) return cours[i];
     }
 
     throw "Le cours ayant l'identifiant " + id + " n'existe pas!";
@@ -237,7 +236,7 @@ function getCoursById(csp, id) {
 function isConsistent(cours, professeur, assignment) {
     if (coursDejaAssigne(cours, assignment)) return false;
     if (mauvaiseEvaluation(cours, professeur, assignment)) return false;
-    if (plageDejaAssignee(cours, professeur, assignment)) return false;    
+    if (plageDejaAssignee(cours, professeur, assignment)) return false;
 
     // Autres checks de contraintes...
 
@@ -246,7 +245,7 @@ function isConsistent(cours, professeur, assignment) {
 
 // Section des fonctions de contraintes!
 
-// Est-ce que le cours est déjà assigné? 
+// Est-ce que le cours est déjà assigné?
 function coursDejaAssigne(cours, assignment) {
     for (var property in assignment) {
         if (assignment.hasOwnProperty(property)) {
@@ -261,7 +260,7 @@ function coursDejaAssigne(cours, assignment) {
 // Ceci ne sera utilisé que quand il sera possible d'avoir plus qu'un cours par professeur...
 function plageDejaAssignee(cours, professeur, assignment) {
     var coursDonnes = assignment[professeur.id];
-    
+
     for (var i = 0; i < coursDonnes.length; i++) {
         var coursDonne = getCoursById(csp, coursDonnes[i]);
         if (coursDonne["jour"] == cours["jour"] && coursDonne["periode"] == cours["periode"]) return true;
