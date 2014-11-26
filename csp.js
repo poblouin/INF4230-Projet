@@ -37,6 +37,7 @@
 // - Un professeur qui a une mauvaise évaluation pour le cours X, ne peut pas donner le cours X.
 // - Le directeur a priorité sur tout.
 // - Un professeur a priorité sur un chargé de cours.
+// - Un prof a priorité sur un cours s'il est le dernier à  l'avoir donné. (Il perd la prio après 4 fois consécutives, pas impémenté)
 
 // Plus simple des int pour l'heuristique.
 var DIRECTEUR = 3,
@@ -50,6 +51,7 @@ var csp = {
         nom: "Harish Gunnarr",
         coursDesires: ["inf1120-00", "inf3105-10", "inf4230-00", "inf5000-22", "inf2120-00"],
         niveau: CHARGE_DE_COURS,
+        coursSessionDerniere: [],
         mauvaiseEvaluation : [],
         nombreCoursDesires: 2,
         nombreCoursAssignes: 0
@@ -57,8 +59,9 @@ var csp = {
     {
         id: "prof2",
         nom: "Lucio Benjamin",
-        coursDesires: ["inf2120-00", "inf3105-10"],
+        coursDesires: ["inf2120-00", "inf3105-10", "inf2015-40"],
         niveau: PROFESSEUR,
+        coursSessionDerniere: [],
         mauvaiseEvaluation : [],
         nombreCoursDesires: 2,
         nombreCoursAssignes: 0
@@ -66,8 +69,9 @@ var csp = {
     {
         id: "prof3",
         nom: "Mickey Hyakinthos",
-        coursDesires: ["inf1120-00"],
+        coursDesires: ["inf2120-00", "inf4375-10"],
         niveau: PROFESSEUR,
+        coursSessionDerniere: ["inf2120-00"],
         mauvaiseEvaluation : [],
         nombreCoursDesires: 1,
         nombreCoursAssignes: 0
@@ -103,6 +107,18 @@ var csp = {
         sigle: "INF4230",
         jour: "vendredi",
         periode: "SOIR"
+    },
+    {
+        id: "inf4375-10",
+        sigle: "INF4230",
+        jour: "jeudi",
+        periode: "SOIR"
+    },
+    {
+        id: "inf2015-40",
+        sigle: "INF4230",
+        jour: "vendredi",
+        periode: "PM"
     }
     ]
 };
@@ -166,7 +182,8 @@ function backtrackingSearch(csp, assignment) {
 // on va pouvoir éliminer des valeurs possibles du domaine. Pour l'instant, on retourne juste la liste de
 // cours désirés par le professeurs.
 function orderDomainValues(professeur, assignment, csp) {
-    return professeur["coursDesires"];
+    return prioriteCoursDerniereSession(professeur, csp);
+    //return professeur["coursDesires"];
 }
 
 // Retourne si un professeur a une assignation complète.
@@ -260,7 +277,39 @@ function isConsistent(cours, professeur, assignment) {
     return true;
 }
 
-// Section des fonctions de contraintes!
+// =================================================
+//      Section des fonctions d'heuristiques
+// =================================================
+
+// Ajuster le domaine d'un professeur si un de ses choix est un cours qui a été
+// donné par un autre prof à la dernière session car ce dernier a priorité sur ce cours.
+function prioriteCoursDerniereSession(professeur, csp) {
+    var professeurs = csp['professeurs'];
+    var coursDesires = professeur['coursDesires'];
+
+    for (var i = 0; i < professeurs.length; i++) {
+        if(professeurs[i]['id'] !== professeur['id']) {
+            var courant = professeurs[i];
+
+            if(courant['coursSessionDerniere'].length !== 0) {
+                var cours = courant['coursSessionDerniere'];
+
+                for(var j = 0; j < cours.length; j++) {
+                    if(coursDesires.indexOf(cours[j]) >= 0) {
+                        coursDesires.splice(coursDesires.indexOf(cours[j]), 1);
+                    }
+                }
+            }
+        }
+    }
+    //console.log(coursDesires);
+    return coursDesires;
+}
+
+
+// =================================================
+//      Section des fonctions de contraintes
+// =================================================
 
 // Est-ce que le cours est déjà assigné?
 function coursDejaAssigne(cours, assignment) {
