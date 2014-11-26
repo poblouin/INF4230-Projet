@@ -38,8 +38,10 @@
 // - Le directeur a priorité sur tout.
 // - Un professeur a priorité sur un chargé de cours.
 // - Un prof a priorité sur un cours s'il est le dernier à  l'avoir donné. (Il perd la prio après 4 fois consécutives, pas impémenté)
+// - Un PROFESSEUR ne peut pas donner plus de 2 cours.
+// - Un CHARGE_DE_COURS ne peut donner plus de 4 cours.
 
-// Plus simple des int pour l'heuristique.
+// Plus simple des int pour l'heuristique et pour trier le array (voir fonction search).
 var DIRECTEUR = 3,
 PROFESSEUR = 2,
 CHARGE_DE_COURS = 1;
@@ -140,14 +142,22 @@ var csp = {
 //    prof3: []
 //};
 function search(csp) {
-    // On génère un objet 'assignment' selon les données du problèmes.
     var assignment = {};
     var professeurs = csp["professeurs"];
 
-    for (var i = 0; i < professeurs.length; i++) {
-        var professeur = professeurs[i]["id"];
-        assignment[professeur] = [];
-    }
+    if(validerMaxCours(professeurs)) {
+
+        for (var i = 0; i < professeurs.length; i++) {
+            var professeur = professeurs[i]["id"];
+            assignment[professeur] = [];
+        }
+
+        // On trie le tableau de professeurs dans l'objet csp selon le niveau en ordre décroissant.
+        // directeur > professeur > chargé de cours
+        professeurs.sort(function(a, b) {return b['niveau']-a['niveau']});
+
+    } else
+        throw 'Un professeur peut donné un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
     return backtrackingSearch(csp, assignment);
 }
@@ -304,7 +314,7 @@ function prioriteCoursDerniereSession(professeur, csp) {
     }
     //console.log(coursDesires);
     return coursDesires;
-}
+};
 
 
 // =================================================
@@ -344,6 +354,26 @@ function mauvaiseEvaluation(cours, professeur, assignment) {
 
     return false;
 }
+
+// - Un PROFESSEUR ne peut pas donner plus de 2 cours.
+// - Un CHARGE_DE_COURS ne peut donner plus de 4 cours.
+// Cette fonction existe seulement pour qu'on ne fasse pas d'erreur quand on crée des données manuellement.
+function validerMaxCours(professeurs) {
+    var MAX_PROFESSEUR = 2,
+        MAX_CHARGE_DE_COURS = 4;
+
+    for(var i = 0; i < professeurs.length; i++) {
+        var courant = professeurs[i];
+
+        if(courant['niveau'] === PROFESSEUR) {
+            if(courant['nombreCoursDesires'] > MAX_PROFESSEUR) return false;
+
+        } else if (courant['niveau'] === CHARGE_DE_COURS) {
+            if(courant['nombreCoursDesires'] > MAX_CHARGE_DE_COURS) return false;
+        }
+    }
+    return true;
+};
 
 // TODO: Une shitload de contraintes!
 

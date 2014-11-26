@@ -6,9 +6,9 @@
   "dependencies": {
     "connect": "^3.3.3",
     "express": "^4.10.2",
-    "path": "^0.4.9",
     "favicon": "^0.0.2",
     "morgan": "^1.5.0",
+    "path": "^0.4.9",
     "static-favicon": "^2.0.0-alpha"
   },
   "devDependencies": {},
