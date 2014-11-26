@@ -41,11 +41,6 @@
 // - Un PROFESSEUR ne peut pas donner plus de 2 cours.
 // - Un CHARGE_DE_COURS ne peut donner plus de 4 cours.
 
-// Plus simple des int pour l'heuristique et pour trier le array (voir fonction search).
-var DIRECTEUR = 3,
-PROFESSEUR = 2,
-CHARGE_DE_COURS = 1;
-
 var csp = {
     professeurs: [
     {
@@ -124,6 +119,11 @@ var csp = {
     }
     ]
 };
+
+// Plus simple des int pour l'heuristique et pour trier le array (voir fonction search).
+var DIRECTEUR = 3,
+PROFESSEUR = 2,
+CHARGE_DE_COURS = 1;
 
 // =================================================
 // Section des algorithmes: Cette section va rester!
@@ -218,19 +218,23 @@ function isComplete(csp) {
 function selectNextUnassignedVariable(csp) {
     var professeurs = csp["professeurs"];
     var plusCourtNbrCours = Infinity;
-    var niveauActuel = -Infinity;
+    var niveau = -Infinity;
     var profAAssigner = undefined;
     for (var i = 0; i < professeurs.length; i++) {
         var professeur = professeurs[i];
         var longueur = professeur.coursDesires.length;
 
-        if (niveauActuel < professeur.niveau && professeur.nombreCoursAssignes < professeur.nombreCoursDesires) {
+        // TODO : Le niveau ici n'aura plus de raison d'exister.
+        if (niveau < professeur.niveau && professeur.nombreCoursAssignes < professeur.nombreCoursDesires) {
+
+          // TODO : La sélection du directeur devrait se faire avant le début de l'algo et on devrait retirer
+          //        les choix du directeur du dommaine de tous les profs.
             if (professeur.niveau == DIRECTEUR) {
                 profAAssigner = professeur;
                 break;
             }
             else if(longueur < plusCourtNbrCours) {
-                niveauActuel = professeur.niveau;
+                niveau = professeur.niveau;
                 plusCourtNbrCours = longueur;
                 profAAssigner = professeur;
             }
@@ -357,7 +361,8 @@ function mauvaiseEvaluation(cours, professeur, assignment) {
 
 // - Un PROFESSEUR ne peut pas donner plus de 2 cours.
 // - Un CHARGE_DE_COURS ne peut donner plus de 4 cours.
-// Cette fonction existe seulement pour qu'on ne fasse pas d'erreur quand on crée des données manuellement.
+// Cette fonction existe seulement pour qu'on ne fasse pas d'erreur quand on crée des données manuellement
+// et agit comme une contrainte.
 function validerMaxCours(professeurs) {
     var MAX_PROFESSEUR = 2,
         MAX_CHARGE_DE_COURS = 4;
