@@ -176,7 +176,10 @@ function backtrackingSearch(csp, assignment) {
         addAssignment(professeur, cours["id"], assignment);
 
         if (isConsistent(cours, professeur, assignmentCopy)) {
-            // TODO: Vérification du 'arc-consistency' ici!
+			//Ajout de AC3 : semble fonctionnel
+			//Des tests plus approfondies vont etre necessaire. 
+            var cspCopy = JSON.parse(JSON.stringify(csp));
+			AC3(cspCopy);
             var result = backtrackingSearch(csp, assignment);
             if (result) break;
         }
@@ -222,23 +225,35 @@ function selectNextUnassignedVariable(csp) {
     var profAAssigner = undefined;
     for (var i = 0; i < professeurs.length; i++) {
         var professeur = professeurs[i];
-        var longueur = professeur.coursDesires.length;
+        var longueur = professeur["coursDesires"].length;
+		 // Il s'agit du directeur et qu'il y a des cours, alors il est le premier a choisir.
+			// On peux quitter la boucle et le retourner.
+		if(professeur["niveau"] == DIRECTEUR && professeur["nombreCoursAssignes"] < professeur["nombreCoursDesires"]){
+			profAAssigner = professeur;
+			break;
+		}
+		else if(longueur < plusCourtNbrCours && professeur["nombreCoursAssignes"] < professeur["nombreCoursDesires"]){
+			plusCourtNbrCours = longueur;
+			profAAssigner = professeur;
+		}
+			// Poulette : jai mis ca en commentaire pcq ca compilait pas
+			/*
+			// TODO : Le niveau ici n'aura plus de raison d'exister.
+			if (niveau < professeur["niveau"] && professeur["nombreCoursAssignes"] < professeur["nombreCoursDesires"]) {
 
-        // TODO : Le niveau ici n'aura plus de raison d'exister.
-        if (niveau < professeur.niveau && professeur.nombreCoursAssignes < professeur.nombreCoursDesires) {
-
-          // TODO : La sélection du directeur devrait se faire avant le début de l'algo et on devrait retirer
-          //        les choix du directeur du dommaine de tous les profs.
-            if (professeur.niveau == DIRECTEUR) {
-                profAAssigner = professeur;
-                break;
-            }
-            else if(longueur < plusCourtNbrCours) {
-                niveau = professeur.niveau;
-                plusCourtNbrCours = longueur;
-                profAAssigner = professeur;
-            }
-        }
+			  // TODO : La sélection du directeur devrait se faire avant le début de l'algo et on devrait retirer
+			  //        les choix du directeur du dommaine de tous les profs.
+				if (professeur["niveau"] == DIRECTEUR) {
+					profAAssigner = professeur;
+					break;
+				}
+				else if(longueur < plusCourtNbrCours) {
+					niveau = professeur["niveau"];
+					plusCourtNbrCours = longueur;
+					profAAssigner = professeur;
+				}
+			}
+		*/
     }
     return profAAssigner;
 }
@@ -290,6 +305,86 @@ function isConsistent(cours, professeur, assignment) {
 
     return true;
 }
+
+
+// =================================================
+//      Section fonctions AC3
+// =================================================
+
+//Passe une copie de csp
+function AC3 (csp){
+	var queue = remplirQueue(csp);
+
+	while(queue.length != 0){
+		var arcATraiter = queue.pop();
+		// On verifie si il y a des valeurs inconsistentes
+		if (removeValeurInconsistentes (csp, arcATraiter)){
+		// Si oui, alors on ajoute la paire inverse a la queue
+			for(i = 0 ; i < arcATraiter.length ; i++){
+				var queueArc = new Array();
+				queueArc.push(arcATraiter[1]);
+				queueArc.push(arcATraiter[0]);
+				queue.push(queueArc);
+			}
+
+		}
+	}
+}
+
+//Fonction qui supprime le cours identique dans xi
+//si le domaine de xi est plus grand que le domaine de xj
+//Cependant, je ne suis pas sur si c'est assez, c'est ce que moi 
+//et richard ont compris.
+function removeValeurInconsistentes (csp, arcATraiter){
+	var removed = false;
+	
+	var arcXi = getProfesseurById(csp, arcATraiter[0]);
+	var arcXj = getProfesseurById(csp, arcATraiter[1]);
+	
+	//Domaine xi (Cours de arcXi)
+	for(i = 0 ; i < arcXi["coursDesires"].length; i++){
+		//Domaine xj (Cours de arcXj)
+		for(j = 0 ; j < arcXj["coursDesires"].length; j++){
+			//Le domaine de xi est plus grand que xj
+			if(arcXi["coursDesires"].length > arcXj["coursDesires"].length)
+			{
+				//Verifier si un cours de xi se retrouve dans xj
+				//Si oui, alors on l'enleve de xi.
+				if(arcXi["coursDesires"][i] == arcXj["coursDesires"][j])
+				{
+					arcXi["coursDesires"].splice(i,1);
+					removed = true;
+				}
+			}
+		}
+	}
+	return removed;
+}
+
+
+//Fonction qui cree des pairs d'arcs avec les id des profs.
+//Retourne une queue remplis des arcs
+// donne : [ 'prof1', 'prof2' ]
+function remplirQueue (csp){
+	var queue = new Array();
+	var professeurs = csp["professeurs"];
+	for ( i = 0 ; i < professeurs.length; i++)
+	{
+		for( j = 0 ; j < professeurs.length; j++){
+			//Creation d'un array temporaire pour "holder" les pairs
+			var queueArc = new Array();
+			if(professeurs[i].id != professeurs[j].id)
+			{
+				queueArc.push(professeurs[i].id)
+				queueArc.push(professeurs[j].id);
+				// On push alors les pair dans l'array que l'on retourne a la fin
+				queue.push(queueArc);
+			}
+		}		
+	}
+	return queue;
+}
+
 
 // =================================================
 //      Section des fonctions d'heuristiques
@@ -379,6 +474,7 @@ function validerMaxCours(professeurs) {
     }
     return true;
 };
+
 
 // TODO: Une shitload de contraintes!
 
