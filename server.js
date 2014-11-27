@@ -26,6 +26,7 @@ var api = express();
 //Les services offerts
 api.get("/CSP", generateurHoraire.getCSP);
 api.get("/professeurs", generateurHoraire.getProfesseurs);
+api.get("/lesCours", generateurHoraire.getTousLesCours);
 api.get("/professeur/:id", generateurHoraire.getProfesseur);
 api.get("/cours/:id", generateurHoraire.getCours);
 

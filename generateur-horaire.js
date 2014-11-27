@@ -22,6 +22,12 @@ exports.getProfesseurs = function(req, res) {
 	res.send(professeur);
 }
 
+//Retourne la liste des cours
+exports.getTousLesCours = function(req, res) {
+	//cours	
+	res.send(cours);
+}
+
 //Retourne le cours ayant l'index passé en paramètre dans le json récupéré
 exports.getCours = function(req, res) {
 	//Cours

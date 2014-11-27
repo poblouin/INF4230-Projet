@@ -9,5 +9,6 @@ Les requetes disponible
  - /index.html
  - /api/professeurs
  - /api/professeur/:id
+ - /api/lesCours/
  - /api/cours/:id
  - /api/CSP

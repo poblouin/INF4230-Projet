@@ -37,30 +37,60 @@
     </nav>
 	
 	<div class="container">
+		Nombre d'employé : {{professeurs.length}}
 		<table class="table table-bordered" >
 			<tr>
-				<th>Professeur</td>
-				<th>Liste cours</th>
-				<th>Cours désiré</th>
+				<th>Employé</td>
+				<th>Titre</th>
+				<th>Cours passé</th>
+				<th>Le(s) cours désiré(s)</th>
+				<th>Nombre cours assigné</th>
 				<th>Mauvaise évaluation</th>
 			</tr>
 			<tr ng-repeat="professeur in professeurs">
 				<td>{{professeur.nom}}</td>
+				<td>{{professeur.niveau==3 ? "Directeur" : professeur.niveau==2 ? "Professeur" : "Chargé de cours"}}</td>
 				<td>
-					<span ng-repeat="unCours in professeur.cours">Sigle:{{unCours.sigle}}, Session:{{unCours.session}}, Groupe:{{unCours.groupe}}, Jour:{{unCours.jour==0?'Lundi':'Autre'}} </br></span>
+					<span 	ng-if="coursPasse = professeur.coursSessionDernieres.length > 0" 
+							ng-repeat="unCoursDernier in professeur.coursSessionDernieres">{{unCoursDernier}}{{$last ? ".":", "}}</span>
+					<span ng-if="!coursPasse">Aucun</span>
 				</td>
 				<td>
 					<span ng-repeat="unCoursDesire in professeur.coursDesires">{{unCoursDesire}}{{$last ? ".":", "}}</span>
 				</td>
 				<td>
-					<span ng-repeat="coursMauvaiseEval in professeur.mauvaiseEvaluation">{{coursMauvaiseEval}}{{$last ? ".":", "}}</span>
+					{{professeur.nombreCoursDesires}}
+				</td>
+				<td>
+					<span 	ng-if="mauvaiseEval = professeur.mauvaiseEvaluation.length > 0" 
+							ng-repeat="coursMauvaiseEval in professeur.mauvaiseEvaluation">{{coursMauvaiseEval}}{{$last ? ".":", "}}</span>
+					<span ng-if="!mauvaiseEval">Aucune</span>
 				</td>
 			</tr>
 		</table>
 		
 		<button ng-click="generer();">Générer l'assignation</button>
 		
-		<div>{{grilleHoraire}}</div>
+		<div ng-if="genererBool">
+			<table class="table table-bordered" >
+				<tr>
+					<th>Employé</td>
+					<th>Cours assigné</th>
+				</tr>
+				<tr ng-repeat="professeur in professeurs">
+					<td>{{professeur.nom}}</td>
+					<td>
+						<div class="col-md-6" ng-repeat="unCoursAssigne in grilleHoraire[professeur.id]">{{unCoursAssigne}}{{$last ? ".":", "}}
+							<table class="table table-bordered" >
+								<th>Periode : {{(getInfo(unCoursAssigne)).periode}}</th>
+								<th>Jour : {{(getInfo(unCoursAssigne)).jour}}</th>
+							</table>
+						</div>						
+					</td>
+				</tr>
+			</table>
+		</div>
+		
 	</div>
 		
 		<script src="bower_components/js/jquery-1.11.1.min.js"></script>

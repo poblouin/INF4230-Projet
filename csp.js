@@ -491,6 +491,5 @@ var test = search(csp);
 console.log(test);
 
 exports.search = function (cspSend){
-    console.log(cspSend);
     return search(cspSend);
 }
