@@ -180,9 +180,9 @@ function backtrackingSearch(csp, assignment) {
 			//Des tests plus approfondies vont etre necessaire. 
 			//Creation d'une copie du csp, on l'envoi dans AC3
 			//Puis on passe la copy a la recursivite
-			var cspCopy = JSON.parse(JSON.stringify(csp));
-			var cspAC3 = AC3(cspCopy);
-            var result = backtrackingSearch(cspAC3, assignment);
+			//var cspCopy = JSON.parse(JSON.stringify(csp));
+			//var cspAC3 = AC3(cspCopy);
+            var result = backtrackingSearch(csp, assignment);
             if (result) break;
         }
 
