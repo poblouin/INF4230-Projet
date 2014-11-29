@@ -41,7 +41,13 @@
 // - Un PROFESSEUR ne peut pas donner plus de 2 cours.
 // - Un CHARGE_DE_COURS ne peut donner plus de 4 cours.
 
-var csp = {
+// Plus simple des int pour l'heuristique et pour trier le array (voir fonction search).
+var DIRECTEUR = 3,
+PROFESSEUR = 2,
+CHARGE_DE_COURS = 1;
+
+// TEST DE BASE
+/*var csp = {
     professeurs: [
     {
         id: "prof1",
@@ -107,23 +113,137 @@ var csp = {
     },
     {
         id: "inf4375-10",
-        sigle: "INF4230",
+        sigle: "INF4375",
         jour: "jeudi",
         periode: "SOIR"
     },
     {
         id: "inf2015-40",
-        sigle: "INF4230",
+        sigle: "INF2015",
         jour: "vendredi",
         periode: "PM"
     }
     ]
-};
+};*/
 
-// Plus simple des int pour l'heuristique et pour trier le array (voir fonction search).
-var DIRECTEUR = 3,
-PROFESSEUR = 2,
-CHARGE_DE_COURS = 1;
+// TEST PLUS COMPLEXE, NOTAMMENT POUR TESTER LE CONCEPT DE 1ER TOUR 2E TOUR, ETC.
+// TODO : coursSessionDerniere, mauvaise données, voir fonction pour détail.
+var csp = {
+    professeurs: [
+    {
+        id: "prof1",
+        nom: "Harish Gunnarr",
+        coursDesires: ["inf1120-00", "inf3105-10", "inf4230-00", "inf5000-22", "inf2120-00", "inm6000-20"],
+        niveau: CHARGE_DE_COURS,
+        coursSessionDerniere: [],
+        mauvaiseEvaluation : [],
+        nombreCoursDesires: 2,
+        nombreCoursAssignes: 0
+    },
+    {
+        id: "prof2",
+        nom: "Lucio Benjamin",
+        coursDesires: ["inf2120-00", "inf2015-40", "inf1120-00", "inm6000-20", "inf3105-10", "inf5000-22", "inf4230-00", "inf3135-20"],
+        niveau: CHARGE_DE_COURS,
+        coursSessionDerniere: ["inf1120-00"],
+        mauvaiseEvaluation : [],
+        nombreCoursDesires: 4,
+        nombreCoursAssignes: 0
+    },
+    {
+        id: "prof3",
+        nom: "Mickey Hyakinthos",
+        coursDesires: ["inf2120-00", "inf4375-10", "inf3143-40", "inm6000-20"],
+        niveau: PROFESSEUR,
+        coursSessionDerniere: ["inf3143-40"],
+        mauvaiseEvaluation : [],
+        nombreCoursDesires: 1,
+        nombreCoursAssignes: 0
+    },
+    {
+        id: "prof4",
+        nom: "John Ferguson",
+        coursDesires: ["inf2120-00", "inf4375-10", "inf5000-22", "inf3143-40"],
+        niveau: PROFESSEUR,
+        coursSessionDerniere: ["inf4375-10"],
+        mauvaiseEvaluation : [],
+        nombreCoursDesires: 1,
+        nombreCoursAssignes: 0
+    },
+    {
+        id: "prof5",
+        nom: "Miley Cyrus",
+        coursDesires: ["inf4375-10", "inf1120-00", "inf2120-00", "inf2015-40", "inf2120-00"],
+        niveau: PROFESSEUR,
+        coursSessionDerniere: ["inf2120-00", "inf2015-40"],
+        mauvaiseEvaluation : [],
+        nombreCoursDesires: 2,
+        nombreCoursAssignes: 0
+    }
+    ],
+    coursDisponibles: [
+    {
+        id: "inf1120-00",
+        sigle: "INF1120",
+        jour: "lundi",
+        periode: "AM"
+    },
+    {
+        id: "inf2120-00",
+        sigle: "INF2120",
+        jour: "lundi",
+        periode: "AM"
+    },
+    {
+        id: "inf3105-10",
+        sigle: "INF3105",
+        jour: "mardi",
+        periode: "AM"
+    },
+    {
+        id: "inm6000-20",
+        sigle: "INM6000",
+        jour: "mardi",
+        periode: "PM"
+    },
+    {
+        id: "inf3135-20",
+        sigle: "INF3135",
+        jour: "mercredi",
+        periode: "AM"
+    },
+    {
+        id: "inf5000-22",
+        sigle: "INF5000",
+        jour: "mercredi",
+        periode: "SOIR"
+    },
+    {
+        id: "inf4230-00",
+        sigle: "INF4230",
+        jour: "vendredi",
+        periode: "SOIR"
+    },
+    {
+        id: "inf4375-10",
+        sigle: "INF4375",
+        jour: "jeudi",
+        periode: "SOIR"
+    },
+    {
+        id: "inf2015-40",
+        sigle: "INF2015",
+        jour: "vendredi",
+        periode: "PM"
+    },
+    {
+        id: "inf3143-40",
+        sigle: "INF3143",
+        jour: "mardi",
+        periode: "SOIR"
+    }
+    ]
+};
 
 // =================================================
 // Section des algorithmes: Cette section va rester!
@@ -142,30 +262,32 @@ CHARGE_DE_COURS = 1;
 //    prof3: []
 //};
 function search(csp) {
-    var assignment = {};
+    var assignment, // TODO : Dans ce assignment on poura mettre les choix du directeur, au besoin et le merger avec les 2 autres.
+        assignment_prof,
+        assignment_charge;
     var professeurs = csp["professeurs"];
 
     if(validerMaxCours(professeurs)) {
-
-        for (var i = 0; i < professeurs.length; i++) {
-            var professeur = professeurs[i]["id"];
-            assignment[professeur] = [];
-        }
+        assignment_prof = initialiserAssignment(professeurs, PROFESSEUR);
+        assignment_charge = initialiserAssignment(professeurs, CHARGE_DE_COURS);
 
         // On trie le tableau de professeurs dans l'objet csp selon le niveau en ordre décroissant.
         // directeur > professeur > chargé de cours
-        professeurs.sort(function(a, b) {return b['niveau']-a['niveau']});
+        professeurs.sort(function(a, b) {return b['niveau']-a['niveau']}); // TODO : Utiliser efficacement ce tri. Note à moi-même (P-O)
 
     } else
         throw 'Un professeur peut donné un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
-    return backtrackingSearch(csp, assignment);
+    backtrackingSearch(csp, assignment_prof, PROFESSEUR);
+    backtrackingSearch(csp, assignment_charge, CHARGE_DE_COURS);
+
+    return mergeAssignment(assignment_prof, assignment_charge);
 }
 
-function backtrackingSearch(csp, assignment) {
-    if (isComplete(csp)) return assignment;
+function backtrackingSearch(csp, assignment, niveau) {
+    if (isComplete(assignment)) return assignment;
 
-    var professeur = selectNextUnassignedVariable(csp);
+    var professeur = selectNextUnassignedVariable(csp, niveau);
     var domaineProfesseur = orderDomainValues(professeur, assignment, csp);
     var result;
 
@@ -177,12 +299,12 @@ function backtrackingSearch(csp, assignment) {
 
         if (isConsistent(cours, professeur, assignmentCopy)) {
 			//Ajout de AC3 : semble fonctionnel
-			//Des tests plus approfondies vont etre necessaire. 
+			//Des tests plus approfondies vont etre necessaire.
 			//Creation d'une copie du csp, on l'envoi dans AC3
 			//Puis on passe la copy a la recursivite
 			//var cspCopy = JSON.parse(JSON.stringify(csp));
 			//var cspAC3 = AC3(cspCopy);
-            var result = backtrackingSearch(csp, assignment);
+            var result = backtrackingSearch(csp, assignment, niveau);
             if (result) break;
         }
 
@@ -191,6 +313,10 @@ function backtrackingSearch(csp, assignment) {
 
     return result;
 }
+
+// =================================================
+//      Section des fonctions utilitaires
+// =================================================
 
 // Cette fonction retourne la liste des cours assignables à un professeur. C'est ici qu'on devra ajouter
 // les heuristiques. C'est d'ailleurs pour ça qu'on passe en argument 'assignment'... En ayant 'assignment',
@@ -203,60 +329,40 @@ function orderDomainValues(professeur, assignment, csp) {
 
 // Retourne si un professeur a une assignation complète.
 function isAssigned(professeur) {
-    return professeur["nombreCoursAssignes"] == professeur["nombreCoursDesires"];
+    return professeur["nombreCoursAssignes"] === professeur["nombreCoursDesires"];
 }
 
 // Un 'assignment' est complet si chacun des professeurs a un cours assigné. Ceci est construit de façon à
 // pouvoir permettre un nombre illimité de professeurs.
-function isComplete(csp) {
+function isComplete(assignment) {
     var professeurs = csp["professeurs"];
 
-    for (var i = 0; i < professeurs.length; i++) {
-        if (!isAssigned(professeurs[i])) return false;
+    for (var prof in assignment) {
+        var professeur = getProfesseurById(csp, prof);
+        if (!isAssigned(professeur)) return false;
     }
-
     return true;
-}
+};
 
 // Va retourner la prochaine variable (professeur) qui n'est pas complètement assignée.
-// Heuristique ajoutee : on selectionne le prof avec le moins de cours desires en premier.
-function selectNextUnassignedVariable(csp) {
+// TODO : éventuellement il faudrait sélectionner les profs par ancienneté.
+// TODO : La sélection du directeur devrait se faire avant le début de l'algo et on devrait retirer
+//        les choix du directeur du dommaine de tous les profs.
+function selectNextUnassignedVariable(csp, niveau) {
     var professeurs = csp["professeurs"];
-    var plusCourtNbrCours = Infinity;
-    var niveau = -Infinity;
     var profAAssigner = undefined;
+    var tour = Infinity;
+
     for (var i = 0; i < professeurs.length; i++) {
         var professeur = professeurs[i];
-        var longueur = professeur["coursDesires"].length;
-		 // Il s'agit du directeur et qu'il y a des cours, alors il est le premier a choisir.
-			// On peux quitter la boucle et le retourner.
-		if(professeur["niveau"] == DIRECTEUR && professeur["nombreCoursAssignes"] < professeur["nombreCoursDesires"]){
-			profAAssigner = professeur;
-			break;
-		}
-		else if(longueur < plusCourtNbrCours && professeur["nombreCoursAssignes"] < professeur["nombreCoursDesires"]){
-			plusCourtNbrCours = longueur;
-			profAAssigner = professeur;
-		}
-			// Poulette : jai mis ca en commentaire pcq ca compilait pas
-			/*
-			// TODO : Le niveau ici n'aura plus de raison d'exister.
-			if (niveau < professeur["niveau"] && professeur["nombreCoursAssignes"] < professeur["nombreCoursDesires"]) {
-
-			  // TODO : La sélection du directeur devrait se faire avant le début de l'algo et on devrait retirer
-			  //        les choix du directeur du dommaine de tous les profs.
-				if (professeur["niveau"] == DIRECTEUR) {
-					profAAssigner = professeur;
-					break;
-				}
-				else if(longueur < plusCourtNbrCours) {
-					niveau = professeur["niveau"];
-					plusCourtNbrCours = longueur;
-					profAAssigner = professeur;
-				}
-			}
-		*/
+        if(professeur['niveau'] === niveau && !isAssigned(professeur)) {
+            if(professeur['nombreCoursAssignes'] < tour) {
+                profAAssigner = professeur;
+                tour = professeur['nombreCoursAssignes'];
+            }
+        }
     }
+    //console.log(profAAssigner)
     return profAAssigner;
 }
 
@@ -308,6 +414,38 @@ function isConsistent(cours, professeur, assignment) {
     return true;
 }
 
+// Retourne le plus grand nombre de cours désirés pour les PROFESSEURS ou CHARGE_DE_COURS.
+// TODO : **POSSIBLEMENT USELESS**
+function trouverMaxCoursDesires(professeurs, niveau) {
+    var max = -Infinity;
+
+    for (var i = 0; i < professeurs.length; i++) {
+        if(professeurs[i]['niveau'] === niveau && professeurs[i]['nombreCoursDesires'] > max)
+            max = professeurs[i]['nombreCoursDesires'];
+    }
+    return max;
+};
+
+// Initialise assignment
+function initialiserAssignment(professeurs, niveau) {
+    var assignment = {};
+
+    for (var i = 0; i < professeurs.length; i++) {
+        if(professeurs[i]['niveau'] === niveau) {
+            var professeur = professeurs[i]['id'];
+            assignment[professeur] = [];
+        }
+    }
+    return assignment;
+};
+
+function mergeAssignment(assign1,assign2) {
+    var assignment = {};
+    for (var prof in assign1) assignment[prof] = assign1[prof];
+    for (var prof in assign2) assignment[prof] = assign2[prof];
+    return assignment;
+};
+
 
 // =================================================
 //      Section fonctions AC3
@@ -340,14 +478,14 @@ function AC3 (csp){
 
 //Fonction qui supprime le cours identique dans xi
 //si le domaine de xi est plus grand que le domaine de xj
-//Cependant, je ne suis pas sur si c'est assez, c'est ce que moi 
+//Cependant, je ne suis pas sur si c'est assez, c'est ce que moi
 //et richard ont compris.
 function removeValeurInconsistentes (csp, arcATraiter){
 	var removed = false;
-	
+
 	var arcXi = getProfesseurById(csp, arcATraiter[0]);
 	var arcXj = getProfesseurById(csp, arcATraiter[1]);
-	
+
 	//Domaine xi (Cours de arcXi)
 	for(i = 0 ; i < arcXi["coursDesires"].length; i++){
 		//Domaine xj (Cours de arcXj)
@@ -387,7 +525,7 @@ function remplirQueue (csp){
 				// On push alors les pair dans l'array que l'on retourne a la fin
 				queue.push(queueArc);
 			}
-		}		
+		}
 	}
 	return queue;
 }
@@ -399,6 +537,8 @@ function remplirQueue (csp){
 
 // Ajuster le domaine d'un professeur si un de ses choix est un cours qui a été
 // donné par un autre prof à la dernière session car ce dernier a priorité sur ce cours.
+// TODO : Dans l'attribut coursDerniereSession, je mets le ID du cours donné, mais ce devrait être le sigle..
+//        le groupe cours ne devrait pas être considéré.
 function prioriteCoursDerniereSession(professeur, csp) {
     var professeurs = csp['professeurs'];
     var coursDesires = professeur['coursDesires'];
@@ -484,6 +624,7 @@ function validerMaxCours(professeurs) {
 
 
 // TODO: Une shitload de contraintes!
+
 
 // Tests!
 debugger;
