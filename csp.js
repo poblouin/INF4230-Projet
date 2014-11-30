@@ -127,7 +127,6 @@ CHARGE_DE_COURS = 1;
 };*/
 
 // TEST PLUS COMPLEXE, NOTAMMENT POUR TESTER LE CONCEPT DE 1ER TOUR 2E TOUR, ETC.
-// TODO : coursSessionDerniere, mauvaise données, voir fonction pour détail.
 var csp = {
     professeurs: [
     {
@@ -286,7 +285,7 @@ prof2: [ 'inf1120-00', 'inm6000-20', 'inf5000-22', 'inf3135-20' ] }*/
 //    prof3: []
 //};
 function search(csp) {
-    var assignment, // TODO : Dans ce assignment on poura mettre les choix du directeur, au besoin et le merger avec les 2 autres.
+    var assignment,
         assignment_prof,
         assignment_charge;
     var professeurs = csp["professeurs"];
