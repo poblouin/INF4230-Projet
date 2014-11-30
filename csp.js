@@ -153,7 +153,7 @@ var csp = {
     {
         id: "prof3",
         nom: "Mickey Hyakinthos",
-        coursDesires: ["inf2120-00", "inf4375-10", "inf3143-40", "inm6000-20"],
+        coursDesires: ["inf2120-00", "inf3143-40", "inf4375-10", "inm6000-20"],
         niveau: PROFESSEUR,
         coursSessionDerniere: ["INF3143"],
         mauvaiseEvaluation : [],
@@ -165,7 +165,7 @@ var csp = {
         nom: "John Ferguson",
         coursDesires: ["inf2120-00", "inf4375-10", "inf5000-22", "inf3143-40", "inf6431-80"],
         niveau: PROFESSEUR,
-        coursSessionDerniere: [/*"inf6431-80"*/"INF4375"],
+        coursSessionDerniere: ["INF6431"],
         mauvaiseEvaluation : [],
         nombreCoursDesires: 1,
         nombreCoursAssignes: 0
@@ -179,7 +179,7 @@ var csp = {
         mauvaiseEvaluation : [],
         nombreCoursDesires: 2,
         nombreCoursAssignes: 0
-    }/*,
+    },
     {
         id: "prof6",
         nom: "Frank Underwood",
@@ -189,7 +189,7 @@ var csp = {
         mauvaiseEvaluation : [],
         nombreCoursDesires: 1,
         nombreCoursAssignes: 0
-    }*/
+    }
     ],
     coursDisponibles: [
     {
@@ -261,11 +261,13 @@ var csp = {
     ]
 };
 // RESULTS
-/*{ prof3: [ 'inf3143-40' ],
+/*{ prof6: [ 'inf6431-80' ],
+prof3: [ 'inf3143-40' ],
 prof4: [ 'inf4375-10' ],
 prof5: [ 'inf2120-00', 'inf2015-40' ],
 prof1: [ 'inf3105-10', 'inf4230-00' ],
 prof2: [ 'inf1120-00', 'inm6000-20', 'inf5000-22', 'inf3135-20' ] }*/
+
 
 // =================================================
 // Section des algorithmes: Cette section va rester!
@@ -297,17 +299,15 @@ function search(csp) {
         // directeur > professeur > chargé de cours
         professeurs.sort(function(a, b) {return b['niveau']-a['niveau']}); // TODO : Utiliser efficacement ce tri. Note à moi-même (P-O)
 
+        assignment = assignerDirecteur(csp);
     } else
-        throw 'Un professeur peut donné un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
-
-    //assignerDirecteur(csp, assignment);
+        throw 'Un directeur peut donné un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
     backtrackingSearch(csp, assignment_prof, PROFESSEUR);
     backtrackingSearch(csp, assignment_charge, CHARGE_DE_COURS);
-    /*var res = mergeAssignment(assignment_prof, assignment_charge);
+    var res = mergeAssignments(assignment_prof, assignment_charge);
 
-    return mergeAssignment(res, assignment);*/
-    return mergeAssignment(assignment_prof, assignment_charge);
+    return mergeAssignments(assignment, res);
 }
 
 function backtrackingSearch(csp, assignment, niveau) {
@@ -336,7 +336,6 @@ function backtrackingSearch(csp, assignment, niveau) {
 
         removeAssignment(professeur, cours, assignment);
     }
-
     return result;
 }
 
@@ -350,7 +349,6 @@ function backtrackingSearch(csp, assignment, niveau) {
 // cours désirés par le professeurs.
 function orderDomainValues(professeur, assignment, csp) {
     return prioriteCoursDerniereSession(professeur, csp);
-    //return professeur["coursDesires"];
 }
 
 // Retourne si un professeur a une assignation complète.
@@ -372,8 +370,6 @@ function isComplete(assignment) {
 
 // Va retourner la prochaine variable (professeur) qui n'est pas complètement assignée.
 // TODO : éventuellement il faudrait sélectionner les profs par ancienneté.
-// TODO : La sélection du directeur devrait se faire avant le début de l'algo et on devrait retirer
-//        les choix du directeur du dommaine de tous les profs.
 function selectNextUnassignedVariable(csp, niveau) {
     var professeurs = csp["professeurs"];
     var profAAssigner = undefined;
@@ -388,7 +384,6 @@ function selectNextUnassignedVariable(csp, niveau) {
             }
         }
     }
-    //console.log(profAAssigner)
     return profAAssigner;
 }
 
@@ -465,7 +460,7 @@ function initialiserAssignment(professeurs, niveau) {
     return assignment;
 };
 
-function mergeAssignment(assign1,assign2) {
+function mergeAssignments(assign1,assign2) {
     var assignment = {};
     for (var prof in assign1) assignment[prof] = assign1[prof];
     for (var prof in assign2) assignment[prof] = assign2[prof];
@@ -590,12 +585,37 @@ function prioriteCoursDerniereSession(professeur, csp) {
             }
         }
     }
-    //console.log(coursDesires);
+    console.log(coursDesires);
     return coursDesires;
 };
 
-function assignerDirecteur(){
+// Assigne le cours choisi au directeur et le retire des coursDesires des professeurs qui l'ont.
+// Cette fonction assume qu'il n'y a qu'un seul directeur, car dans la réalité il n'y en a qu'un seul!
+function assignerDirecteur(csp) {
+    var professeurs = csp['professeurs'];
+    var directeur = professeurs[0]; // tableau trié, le directeur sera toujours le premier, s'il existe.
+    var cours = directeur['coursDesires'][0] // Peu importe le nombre de choix, son premier choix est toujours celui qu'il aura.
+    var assignment = {};
 
+    assignment[directeur['id']] = []
+    addAssignment(directeur, cours, assignment);
+
+    for(var i = 0; i < professeurs.length; i++) {
+        if(professeurs[i]['id'] !== directeur['id']) {
+            var coursDesires = professeurs[i]['coursDesires'];
+            var coursSessionDerniere = professeurs[i]['coursSessionDerniere'];
+
+            // Retire le cours du directeur de la liste de tous tous les profs, s'il existe.
+            var index = coursDesires.indexOf(cours);
+            if(index >= 0) coursDesires.splice(index, 1);
+
+            // Retire le cours du directeur de la liste des cours de la session dernière de tous les profs, s'il existe
+            // pour éviter du traitement en double dans la fonction prioriteCoursDerniereSession().
+            var index = coursSessionDerniere.indexOf(cours);
+            if(index >= 0) coursSessionDerniere.splice(index, 1);
+        }
+    }
+    return assignment;
 };
 
 // =================================================
@@ -628,6 +648,7 @@ function plageDejaAssignee(cours, professeur, assignment) {
 
 // On prend le professeur qui vien de recevoir un cours assigner, puis on verifie
 // que le cours n'est pas dans sa liste de cours ayant une mauvaise evaluation
+// TODO : Comme prioriteCoursDerniereSession() Il ne faut pas utiliser les groupes cours pour comparer, seulement les sigles.
 function mauvaiseEvaluation(cours, professeur, assignment) {
     for (i = 0; i < professeur["mauvaiseEvaluation"].length; i++) {
         if (cours["id"] == professeur["mauvaiseEvaluation"][i]) return true;
@@ -641,7 +662,8 @@ function mauvaiseEvaluation(cours, professeur, assignment) {
 // Cette fonction existe seulement pour qu'on ne fasse pas d'erreur quand on crée des données manuellement
 // et agit comme une contrainte.
 function validerMaxCours(professeurs) {
-    var MAX_PROFESSEUR = 2,
+    var MAX_DIRECTEUR = 1;
+        MAX_PROFESSEUR = 2,
         MAX_CHARGE_DE_COURS = 4;
 
     for(var i = 0; i < professeurs.length; i++) {
@@ -652,6 +674,9 @@ function validerMaxCours(professeurs) {
 
         } else if (courant['niveau'] === CHARGE_DE_COURS) {
             if(courant['nombreCoursDesires'] > MAX_CHARGE_DE_COURS) return false;
+
+        } else {
+            if(courant['nombreCoursDesires'] > MAX_DIRECTEUR) return false;
         }
     }
     return true;
