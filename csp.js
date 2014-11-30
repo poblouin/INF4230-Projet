@@ -55,7 +55,7 @@ CHARGE_DE_COURS = 1;
         coursDesires: ["inf1120-00", "inf3105-10", "inf4230-00", "inf5000-22", "inf2120-00"],
         niveau: CHARGE_DE_COURS,
         coursSessionDerniere: [],
-        mauvaiseEvaluation : [],
+        mauvaiseEvaluation : ["inf1120-00"],
         nombreCoursDesires: 2,
         nombreCoursAssignes: 0
     },
@@ -584,7 +584,6 @@ function prioriteCoursDerniereSession(professeur, csp) {
             }
         }
     }
-    console.log(coursDesires);
     return coursDesires;
 };
 
