@@ -74,7 +74,7 @@ CHARGE_DE_COURS = 1;
         nom: "Mickey Hyakinthos",
         coursDesires: ["inf2120-00", "inf4375-10"],
         niveau: PROFESSEUR,
-        coursSessionDerniere: ["inf2120-00"],
+        coursSessionDerniere: ["INF2120"],
         mauvaiseEvaluation : [],
         nombreCoursDesires: 1,
         nombreCoursAssignes: 0
@@ -145,7 +145,7 @@ var csp = {
         nom: "Lucio Benjamin",
         coursDesires: ["inf2120-00", "inf2015-40", "inf1120-00", "inm6000-20", "inf3105-10", "inf5000-22", "inf4230-00", "inf3135-20"],
         niveau: CHARGE_DE_COURS,
-        coursSessionDerniere: ["inf1120-00"],
+        coursSessionDerniere: ["INF1120"],
         mauvaiseEvaluation : [],
         nombreCoursDesires: 4,
         nombreCoursAssignes: 0
@@ -155,7 +155,7 @@ var csp = {
         nom: "Mickey Hyakinthos",
         coursDesires: ["inf2120-00", "inf4375-10", "inf3143-40", "inm6000-20"],
         niveau: PROFESSEUR,
-        coursSessionDerniere: ["inf3143-40"],
+        coursSessionDerniere: ["INF3143"],
         mauvaiseEvaluation : [],
         nombreCoursDesires: 1,
         nombreCoursAssignes: 0
@@ -163,9 +163,9 @@ var csp = {
     {
         id: "prof4",
         nom: "John Ferguson",
-        coursDesires: ["inf2120-00", "inf4375-10", "inf5000-22", "inf3143-40"],
+        coursDesires: ["inf2120-00", "inf4375-10", "inf5000-22", "inf3143-40", "inf6431-80"],
         niveau: PROFESSEUR,
-        coursSessionDerniere: ["inf4375-10"],
+        coursSessionDerniere: [/*"inf6431-80"*/"INF4375"],
         mauvaiseEvaluation : [],
         nombreCoursDesires: 1,
         nombreCoursAssignes: 0
@@ -175,11 +175,21 @@ var csp = {
         nom: "Miley Cyrus",
         coursDesires: ["inf4375-10", "inf1120-00", "inf2120-00", "inf2015-40", "inf2120-00"],
         niveau: PROFESSEUR,
-        coursSessionDerniere: ["inf2120-00", "inf2015-40"],
+        coursSessionDerniere: ["INF2120", "INF2015"],
         mauvaiseEvaluation : [],
         nombreCoursDesires: 2,
         nombreCoursAssignes: 0
-    }
+    }/*,
+    {
+        id: "prof6",
+        nom: "Frank Underwood",
+        coursDesires: ["inf6431-80"],
+        niveau: DIRECTEUR,
+        coursSessionDerniere: [],
+        mauvaiseEvaluation : [],
+        nombreCoursDesires: 1,
+        nombreCoursAssignes: 0
+    }*/
     ],
     coursDisponibles: [
     {
@@ -241,9 +251,21 @@ var csp = {
         sigle: "INF3143",
         jour: "mardi",
         periode: "SOIR"
+    },
+    {
+        id: "inf6431-80",
+        sigle: "INF6431",
+        jour: "lundi",
+        periode: "AM"
     }
     ]
 };
+// RESULTS
+/*{ prof3: [ 'inf3143-40' ],
+prof4: [ 'inf4375-10' ],
+prof5: [ 'inf2120-00', 'inf2015-40' ],
+prof1: [ 'inf3105-10', 'inf4230-00' ],
+prof2: [ 'inf1120-00', 'inm6000-20', 'inf5000-22', 'inf3135-20' ] }*/
 
 // =================================================
 // Section des algorithmes: Cette section va rester!
@@ -278,9 +300,13 @@ function search(csp) {
     } else
         throw 'Un professeur peut donné un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
+    //assignerDirecteur(csp, assignment);
+
     backtrackingSearch(csp, assignment_prof, PROFESSEUR);
     backtrackingSearch(csp, assignment_charge, CHARGE_DE_COURS);
+    /*var res = mergeAssignment(assignment_prof, assignment_charge);
 
+    return mergeAssignment(res, assignment);*/
     return mergeAssignment(assignment_prof, assignment_charge);
 }
 
@@ -537,8 +563,7 @@ function remplirQueue (csp){
 
 // Ajuster le domaine d'un professeur si un de ses choix est un cours qui a été
 // donné par un autre prof à la dernière session car ce dernier a priorité sur ce cours.
-// TODO : Dans l'attribut coursDerniereSession, je mets le ID du cours donné, mais ce devrait être le sigle..
-//        le groupe cours ne devrait pas être considéré.
+// TODO : Laid, mais fonctionnel.
 function prioriteCoursDerniereSession(professeur, csp) {
     var professeurs = csp['professeurs'];
     var coursDesires = professeur['coursDesires'];
@@ -548,11 +573,18 @@ function prioriteCoursDerniereSession(professeur, csp) {
             var courant = professeurs[i];
 
             if(courant['coursSessionDerniere'].length !== 0) {
-                var cours = courant['coursSessionDerniere'];
+                var coursSessionDerniere = courant['coursSessionDerniere'];
 
-                for(var j = 0; j < cours.length; j++) {
-                    if(coursDesires.indexOf(cours[j]) >= 0) {
-                        coursDesires.splice(coursDesires.indexOf(cours[j]), 1);
+                for(var j = 0; j < coursSessionDerniere.length; j++) {
+                    var sigle = coursSessionDerniere[j].toLowerCase();
+
+                    for(var k = 0; k < coursDesires.length; k++) {
+                        var res = coursDesires[k].substr(0,7);
+
+                        if(sigle === res) {
+                            var index = coursDesires.indexOf(coursDesires[k]);
+                            coursDesires.splice(index, 1);
+                        }
                     }
                 }
             }
@@ -562,6 +594,9 @@ function prioriteCoursDerniereSession(professeur, csp) {
     return coursDesires;
 };
 
+function assignerDirecteur(){
+
+};
 
 // =================================================
 //      Section des fonctions de contraintes
