@@ -47,7 +47,7 @@ PROFESSEUR = 2,
 CHARGE_DE_COURS = 1;
 
 // TEST DE BASE
-var csp = {
+/*var csp = {
     professeurs: [
     {
         id: "prof1",
@@ -124,10 +124,10 @@ var csp = {
         periode: "PM"
     }
     ]
-};
+};*/
 
 // TEST PLUS COMPLEXE, NOTAMMENT POUR TESTER LE CONCEPT DE 1ER TOUR 2E TOUR, ETC.
-/*var csp = {
+var csp = {
     professeurs: [
     {
         id: "prof1",
@@ -258,7 +258,7 @@ var csp = {
         periode: "AM"
     }
     ]
-};*/
+};
 // RESULTS
 /*{ prof6: [ 'inf6431-80' ],
 prof3: [ 'inf3143-40' ],
@@ -303,8 +303,8 @@ function search(csp) {
         throw 'Un directeur peut donné un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
     backtrackingSearch(csp, assignment_prof, PROFESSEUR);
-    backtrackingSearch(csp, assignment_charge, CHARGE_DE_COURS);
     var res = mergeAssignments(assignment_prof, assignment_charge);
+    backtrackingSearch(csp, res, CHARGE_DE_COURS);
 
     return mergeAssignments(assignment, res);
 }
