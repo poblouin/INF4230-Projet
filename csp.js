@@ -47,7 +47,7 @@ PROFESSEUR = 2,
 CHARGE_DE_COURS = 1;
 
 // TEST DE BASE
-/*var csp = {
+var csp = {
     professeurs: [
     {
         id: "prof1",
@@ -124,10 +124,10 @@ CHARGE_DE_COURS = 1;
         periode: "PM"
     }
     ]
-};*/
+};
 
 // TEST PLUS COMPLEXE, NOTAMMENT POUR TESTER LE CONCEPT DE 1ER TOUR 2E TOUR, ETC.
-var csp = {
+/*var csp = {
     professeurs: [
     {
         id: "prof1",
@@ -258,7 +258,7 @@ var csp = {
         periode: "AM"
     }
     ]
-};
+};*/
 // RESULTS
 /*{ prof6: [ 'inf6431-80' ],
 prof3: [ 'inf3143-40' ],
@@ -285,7 +285,7 @@ prof2: [ 'inf1120-00', 'inm6000-20', 'inf5000-22', 'inf3135-20' ] }*/
 //    prof3: []
 //};
 function search(csp) {
-    var assignment,
+    var assignment = {},
         assignment_prof,
         assignment_charge;
     var professeurs = csp["professeurs"];
@@ -298,7 +298,7 @@ function search(csp) {
         // directeur > professeur > chargé de cours
         professeurs.sort(function(a, b) {return b['niveau']-a['niveau']}); // TODO : Utiliser efficacement ce tri. Note à moi-même (P-O)
 
-        assignment = assignerDirecteur(csp);
+        if(professeurs[0]['niveau'] === DIRECTEUR) assignment = assignerDirecteur(csp);
     } else
         throw 'Un directeur peut donné un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
