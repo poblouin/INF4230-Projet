@@ -323,12 +323,11 @@ function backtrackingSearch(csp, assignment, niveau) {
         addAssignment(professeur, cours["id"], assignment);
 
         if (isConsistent(cours, professeur, assignmentCopy)) {
-			//Ajout de AC3 : semble fonctionnel
-			//Des tests plus approfondies vont etre necessaire.
-			//Creation d'une copie du csp, on l'envoi dans AC3
-			//Puis on passe la copy a la recursivite
+			//Petit probleme : quand je passe cspCopy a AC3
+			//Ceci cause des problemes avec la recursiviter
+			//Je passe donc csp directement
 			//var cspCopy = JSON.parse(JSON.stringify(csp));
-			//var cspAC3 = AC3(cspCopy);
+			var cspAC3 = AC3(csp,assignment);
             var result = backtrackingSearch(csp, assignment, niveau);
             if (result) break;
         }
@@ -472,25 +471,24 @@ function mergeAssignments(assign1,assign2) {
 // =================================================
 
 //Passe une copie de csp
-function AC3 (csp){
+function AC3 (csp, assignment){
 	var queue = remplirQueue(csp);
-
 	while(queue.length != 0){
 		var arcATraiter = queue.pop();
 		// On verifie si il y a des valeurs inconsistentes
-		if (removeValeurInconsistentes (csp, arcATraiter)){
-			if(arcATraiter.length == 0)
+		if (removeValeurInconsistentes (csp, arcATraiter,assignment)){
+			// Si oui, alors on ajoute la paire inverse a la queue
+			var queueArc = new Array();
+			queueArc.push(arcATraiter[1]);
+			queueArc.push(arcATraiter[0]);
+			queue.push(queueArc);
+			// Verifie que le prof auquel on a supprimer le cours
+			// ne possede pas 0 de length.
+			var verificationProf = getProfesseurById(csp,arcATraiter[1])
+			if(verificationProf["coursDesires"].length == 0)
 			{
 				return undefined;
 			}
-		// Si oui, alors on ajoute la paire inverse a la queue
-			for(i = 0 ; i < arcATraiter.length ; i++){
-				var queueArc = new Array();
-				queueArc.push(arcATraiter[1]);
-				queueArc.push(arcATraiter[0]);
-				queue.push(queueArc);
-			}
-
 		}
 	}
 	return csp;
@@ -500,26 +498,30 @@ function AC3 (csp){
 //si le domaine de xi est plus grand que le domaine de xj
 //Cependant, je ne suis pas sur si c'est assez, c'est ce que moi
 //et richard ont compris.
-function removeValeurInconsistentes (csp, arcATraiter){
+function removeValeurInconsistentes (csp, arcATraiter,assignment){
 	var removed = false;
-
 	var arcXi = getProfesseurById(csp, arcATraiter[0]);
 	var arcXj = getProfesseurById(csp, arcATraiter[1]);
+	
+	var profAssignement = undefined;
+	for ( var profId in assignment ){
+		if(arcXi.id == profId){
+			 profAssignement = profId;
+		}
+	}
+	if(!profAssignement) return;
 
-	//Domaine xi (Cours de arcXi)
-	for(i = 0 ; i < arcXi["coursDesires"].length; i++){
+	//Domaine xi (Cours de arcXi) : correspond a profAssignement pour l'assignment
+	for(i = 0 ; i < assignment[profAssignement].length; i++){
 		//Domaine xj (Cours de arcXj)
 		for(j = 0 ; j < arcXj["coursDesires"].length; j++){
-			//Le domaine de xi est plus grand que xj
-			if(arcXi["coursDesires"].length > arcXj["coursDesires"].length)
+			//Verifier si un cours de xi se retrouve dans xj
+			//Si oui, alors on l'enleve de xj.
+			if(assignment[profAssignement][i] == arcXj["coursDesires"][j])
 			{
-				//Verifier si un cours de xi se retrouve dans xj
-				//Si oui, alors on l'enleve de xi.
-				if(arcXi["coursDesires"][i] == arcXj["coursDesires"][j])
-				{
-					arcXi["coursDesires"].splice(i,1);
-					removed = true;
-				}
+				arcXj["coursDesires"].splice(j,1);	
+				removed = true;
+				
 			}
 		}
 	}
