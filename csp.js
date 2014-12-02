@@ -47,8 +47,7 @@ PROFESSEUR = 2,
 CHARGE_DE_COURS = 1;
 
 var csp = require('./generateur.js').csp;
-//console.log(csp)
-
+// console.log(csp)
 // =================================================
 // Section des algorithmes: Cette section va rester!
 // =================================================
@@ -341,6 +340,9 @@ function remplirQueue (csp){
 // Ajuster le domaine d'un professeur si un de ses choix est un cours qui a été
 // donné par un autre prof à la dernière session car ce dernier a priorité sur ce cours.
 // TODO : Laid, mais fonctionnel.
+
+//Ajout d'une validation du nombre de cours desires pour un professeur, s'il est à 0 ne pas retirer de la liste
+//sinon on enlèvait un cours qui pouvait être pris par un autre professeur
 function prioriteCoursDerniereSession(professeur, csp) {
     var professeurs = csp['professeurs'];
     var coursDesires = professeur['coursDesires'];
@@ -349,7 +351,7 @@ function prioriteCoursDerniereSession(professeur, csp) {
         if(professeurs[i]['id'] !== professeur['id']) {
             var courant = professeurs[i];
 
-            if(courant['coursSessionDerniere'].length !== 0) {
+            if(courant['coursSessionDerniere'].length > 0 && courant['nombreCoursDesires'] > 0) {
                 var coursSessionDerniere = courant['coursSessionDerniere'];
 
                 for(var j = 0; j < coursSessionDerniere.length; j++) {
@@ -473,5 +475,6 @@ var test = search(csp);
 console.log(test);
 
 exports.search = function (cspSend){
-    return search(cspSend);
+	csp = cspSend;
+    return search(csp);
 }

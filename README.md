@@ -6,9 +6,9 @@ Si message d'erreur, veuillez telecharger les fichiers manquant avec npm
 Pour debug : npm install -g node-inspector apres npm-debug server.js
 
 Les requetes disponible
- - /index.html
- - /api/professeurs
- - /api/professeur/:id
- - /api/lesCours/
- - /api/cours/:id
- - /api/CSP
+ - /index.html -> Affiche l'interface pour l'utilisateur
+ - /api/CSP -> retourne la solution du csp
+ - /CSPs/:index -> retourne le csp dans le dossier spécifié
+ 
+ Post: 
+ -api/createCSP -> modifie le CSP

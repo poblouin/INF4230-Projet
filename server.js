@@ -27,10 +27,6 @@ var api = express();
 api.post("/createCSP", generateurHoraire.postCSP);
 api.get("/CSP", generateurHoraire.getGenerer);
 api.get("/CSPs/:index", generateurHoraire.getCSPIndex);
-api.get("/professeurs", generateurHoraire.getProfesseurs);
-api.get("/lesCours", generateurHoraire.getTousLesCours);
-api.get("/professeur/:id", generateurHoraire.getProfesseur);
-api.get("/cours/:id", generateurHoraire.getCours);
 
 app.use(bodyParser.json());
 
