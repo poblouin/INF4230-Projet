@@ -1,0 +1,16 @@
+{
+    "professeurs" : [
+        {{#repeat 5}}
+            {
+                "id": "prof{{uniqueIndex}}",
+                "name": "{{firstName}} {{lastName}}",
+                "coursDesires": [{{cours 3 6}}],
+                "niveau": 1,
+                "coursSessionDerniere": [{{coursSessionDerniere}}],
+                "mauvaiseEvaluation": [],
+                "nombreCoursDesires": 2,
+                "nombreCoursAssignes": 0
+            }
+        {{/repeat}}
+    ]
+}

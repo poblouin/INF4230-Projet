@@ -5,6 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "connect": "^3.3.3",
+    "dummy-json": "0.0.2",
     "express": "^4.10.2",
     "favicon": "^0.0.2",
     "morgan": "^1.5.0",

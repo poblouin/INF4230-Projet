@@ -128,8 +128,94 @@ CHARGE_DE_COURS = 1;
 
 // TEST PLUS COMPLEXE, NOTAMMENT POUR TESTER LE CONCEPT DE 1ER TOUR 2E TOUR, ETC.
 var csp = {
-    professeurs: [
-    {
+    /*professeurs: [
+    {*/
+"professeurs": [
+        {
+            "id": "prof0",
+            "name": "Leanne Flinn",
+            "coursDesires": [
+                "inf6431-80",
+                "inf3135-20",
+                "inm6000-20"
+            ],
+            "niveau": 1,
+            "coursSessionDerniere": [
+                "INF3135"
+            ],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 2,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof1",
+            "name": "Edward Young",
+            "coursDesires": [
+                "inf5000-22",
+                "inf2015-40",
+                "inf3143-40"
+            ],
+            "niveau": 1,
+            "coursSessionDerniere": [
+                "INF3143"
+            ],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 2,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof2",
+            "name": "Haydee Milligan",
+            "coursDesires": [
+                "inf2015-40",
+                "inf2120-00",
+                "inm6000-20"
+            ],
+            "niveau": 1,
+            "coursSessionDerniere": [
+                "INF2120"
+            ],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 2,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof3",
+            "name": "Lyle Keesee",
+            "coursDesires": [
+                "inm6000-20",
+                "inf3135-20",
+                "inf4375-10",
+                "inf4230-00",
+                "inf3143-40",
+                "inf1120-00"
+            ],
+            "niveau": 1,
+            "coursSessionDerniere": [
+                "INF1120"
+            ],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 2,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof4",
+            "name": "Shea Mercer",
+            "coursDesires": [
+                "inf5000-22",
+                "inf4375-10",
+                "inf6431-80",
+                "inm6000-20"
+            ],
+            "niveau": 1,
+            "coursSessionDerniere": [
+                "INF6431"
+            ],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 2,
+            "nombreCoursAssignes": 0
+        }
+    /*{
         id: "prof1",
         nom: "Harish Gunnarr",
         coursDesires: ["inf1120-00", "inf3105-10", "inf4230-00", "inf5000-22", "inf2120-00", "inm6000-20"],
@@ -188,7 +274,7 @@ var csp = {
         mauvaiseEvaluation : [],
         nombreCoursDesires: 1,
         nombreCoursAssignes: 0
-    }
+    }*/
     ],
     coursDisponibles: [
     {
@@ -327,7 +413,7 @@ function backtrackingSearch(csp, assignment, niveau) {
 			//Ceci cause des problemes avec la recursiviter
 			//Je passe donc csp directement
 			//var cspCopy = JSON.parse(JSON.stringify(csp));
-			var cspAC3 = AC3(csp,assignment);
+			//var cspAC3 = AC3(csp,assignment);
             var result = backtrackingSearch(csp, assignment, niveau);
             if (result) break;
         }
@@ -502,7 +588,7 @@ function removeValeurInconsistentes (csp, arcATraiter,assignment){
 	var removed = false;
 	var arcXi = getProfesseurById(csp, arcATraiter[0]);
 	var arcXj = getProfesseurById(csp, arcATraiter[1]);
-	
+
 	var profAssignement = undefined;
 	for ( var profId in assignment ){
 		if(arcXi.id == profId){
@@ -519,9 +605,9 @@ function removeValeurInconsistentes (csp, arcATraiter,assignment){
 			//Si oui, alors on l'enleve de xj.
 			if(assignment[profAssignement][i] == arcXj["coursDesires"][j])
 			{
-				arcXj["coursDesires"].splice(j,1);	
+				arcXj["coursDesires"].splice(j,1);
 				removed = true;
-				
+
 			}
 		}
 	}
