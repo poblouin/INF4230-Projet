@@ -54,9 +54,9 @@
 				<td>{{professeur.nom}}</td>
 				<td>{{professeur.niveau==3 ? "Directeur" : professeur.niveau==2 ? "Professeur" : "Chargé de cours"}}</td>
 				<td>
-					<span 	ng-if="coursPasse = professeur.coursSessionDernieres.length > 0" 
-							ng-repeat="unCoursDernier in professeur.coursSessionDernieres">{{unCoursDernier}}{{$last ? ".":", "}}</span>
-					<span ng-if="!coursPasse">Aucun</span>
+					<span 	ng-if="coursPasse = professeur.coursSessionDerniere.length > 0" 
+							ng-repeat="unCoursDernier in professeur.coursSessionDerniere">{{unCoursDernier}}{{$last ? ".":", "}}</span>
+					<span ng-if="coursPasse">Aucun</span>
 				</td>
 				<td>
 					<span ng-repeat="coursDesire in professeur.coursDesires">{{coursDesire}}{{$last ? ".":", "}}</span>

@@ -4,8 +4,7 @@ var csp = {};
 
 //Modifie le CSP par l'interface
 exports.postCSP = function(req, res) {
-	csp = req.body.csp;
-	console.log(csp);
+	csp = req.body.csp;;
 	res.sendStatus(200);
 }
 

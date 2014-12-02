@@ -126,11 +126,11 @@ CHARGE_DE_COURS = 1;
     ]
 };*/
 
+
 // TEST PLUS COMPLEXE, NOTAMMENT POUR TESTER LE CONCEPT DE 1ER TOUR 2E TOUR, ETC.
 var csp = {
-    /*professeurs: [
-    {*/
-"professeurs": [
+	"professeurs": [
+		/*"professeurs": [
         {
             "id": "prof0",
             "name": "Leanne Flinn",
@@ -214,8 +214,8 @@ var csp = {
             "mauvaiseEvaluation": [],
             "nombreCoursDesires": 2,
             "nombreCoursAssignes": 0
-        }
-    /*{
+        }*/
+    {
         id: "prof1",
         nom: "Harish Gunnarr",
         coursDesires: ["inf1120-00", "inf3105-10", "inf4230-00", "inf5000-22", "inf2120-00", "inm6000-20"],
@@ -274,7 +274,7 @@ var csp = {
         mauvaiseEvaluation : [],
         nombreCoursDesires: 1,
         nombreCoursAssignes: 0
-    }*/
+    }
     ],
     coursDisponibles: [
     {
@@ -345,6 +345,7 @@ var csp = {
     }
     ]
 };
+
 // RESULTS
 /*{ prof6: [ 'inf6431-80' ],
 prof3: [ 'inf3143-40' ],
@@ -646,6 +647,9 @@ function remplirQueue (csp){
 // Ajuster le domaine d'un professeur si un de ses choix est un cours qui a été
 // donné par un autre prof à la dernière session car ce dernier a priorité sur ce cours.
 // TODO : Laid, mais fonctionnel.
+
+//Ajout d'une validation du nombre de cours desires pour un professeur, s'il est à 0 ne pas retirer de la liste
+//sinon on enlèvait un cours qui pouvait être pris par un autre professeur
 function prioriteCoursDerniereSession(professeur, csp) {
     var professeurs = csp['professeurs'];
     var coursDesires = professeur['coursDesires'];
@@ -654,7 +658,7 @@ function prioriteCoursDerniereSession(professeur, csp) {
         if(professeurs[i]['id'] !== professeur['id']) {
             var courant = professeurs[i];
 
-            if(courant['coursSessionDerniere'].length !== 0) {
+            if(courant['coursSessionDerniere'].length > 0 && courant['nombreCoursDesires'] > 0) {
                 var coursSessionDerniere = courant['coursSessionDerniere'];
 
                 for(var j = 0; j < coursSessionDerniere.length; j++) {

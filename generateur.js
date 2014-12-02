@@ -40,4 +40,5 @@ var helpers = {
 
 var result = dummyjson.parse(template, {data : data, helpers : helpers});
 result = JSON.parse(result.replace(/&quot;/g,'"')); // Très laid, mais pas le choix de faire ca le template n'ajoute pas les " " automatiquement.
+fs.writeFile('file.json',JSON.stringify(result));
 console.log(JSON.stringify(result));
