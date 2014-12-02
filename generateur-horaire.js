@@ -2,44 +2,6 @@ var cspModule = require("./csp.js");
 
 var csp = {};
 
-//Retourne le cours ayant l'index passé en paramètre dans le json récupéré
-exports.getProfesseur = function(req, res) {
-	//Professeur
-	var index = parseInt(req.params.id);
-	
-	if(index > JSON.parse(professeur).length - 1){
-		res.send("L'id de professeur n'existe pas!");
-	} else {
-		var unProfesseur = JSON.parse(professeur)[index];
-		res.send(unProfesseur);
-	}
-}
-
-//Retourne la liste des professeurs
-exports.getProfesseurs = function(req, res) {
-	//Professeurs	
-	res.send(professeur);
-}
-
-//Retourne la liste des cours
-exports.getTousLesCours = function(req, res) {
-	//cours	
-	res.send(cours);
-}
-
-//Retourne le cours ayant l'index passé en paramètre dans le json récupéré
-exports.getCours = function(req, res) {
-	//Cours
-	var index = parseInt(req.params.id);
-
-	if(index > JSON.parse(professeur).length - 1){
-		res.send("L'id du cours n'existe pas!");
-	} else {
-		var unCours = JSON.parse(cours)[index];
-		res.send(unCours);
-	}
-}
-
 //Modifie le CSP par l'interface
 exports.postCSP = function(req, res) {
 	csp = req.body.csp;
