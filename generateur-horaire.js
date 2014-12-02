@@ -1,7 +1,6 @@
 var cspModule = require("./csp.js");
 
-var professeur = JSON.stringify(require('./data/professeur.json'));
-var cours = JSON.stringify(require('./data/cours.json'));
+var csp = {};
 
 //Retourne le cours ayant l'index passé en paramètre dans le json récupéré
 exports.getProfesseur = function(req, res) {
@@ -41,17 +40,30 @@ exports.getCours = function(req, res) {
 	}
 }
 
+//Modifie le CSP par l'interface
+exports.postCSP = function(req, res) {
+	csp = req.body.csp;
+	console.log(csp);
+	res.send(200);
+}
+
 //Récupère le module de csp et fait appel à la fonction search
 //Retourne les json résultant du csp.
-exports.getCSP = function(req, res) {
-	var csp = {};
-	
-	//Pour ne pas que l'objet soit en référence on le stringify et
-	//ensuite on le parse en objet.
-	csp.professeurs = JSON.parse(professeur);
-	csp.coursDisponibles = JSON.parse(cours);
-	
+exports.getGenerer = function(req, res) {	
 	var CSPjson = cspModule.search(csp);
 	res.send(CSPjson);
+}
+
+//Récupère le module de csp et fait appel à la fonction search
+//Retourne les json résultant du csp.
+exports.getCSPIndex = function(req, res) {
+	var index = req.params.index;
+	
+	var cours = JSON.stringify(require('./data/csp'+index+'/cours.json'));
+	var professeur = JSON.stringify(require('./data/csp'+index+'/professeur.json'));
+	
+	csp.professeurs = JSON.parse(professeur);
+	csp.coursDisponibles = JSON.parse(cours);
+	res.send(csp);
 }
 

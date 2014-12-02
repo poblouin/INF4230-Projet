@@ -2,12 +2,13 @@
 
 /* App Module */
 
-var phonecatApp = angular.module('app', [
+var app = angular.module('app', [
   'ngRoute',
-  'horaireControllers'
+  'horaireControllers',
+  'ui.bootstrap'
 ]);
 
-phonecatApp.config(['$routeProvider',
+app.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/', {
