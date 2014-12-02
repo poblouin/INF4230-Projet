@@ -24,7 +24,9 @@ app.use(serveStatic(__dirname + "/app"));
 var api = express();
 
 //Les services offerts
-api.get("/CSP", generateurHoraire.getCSP);
+api.post("/createCSP", generateurHoraire.postCSP);
+api.get("/CSP", generateurHoraire.getGenerer);
+api.get("/CSPs/:index", generateurHoraire.getCSPIndex);
 api.get("/professeurs", generateurHoraire.getProfesseurs);
 api.get("/lesCours", generateurHoraire.getTousLesCours);
 api.get("/professeur/:id", generateurHoraire.getProfesseur);

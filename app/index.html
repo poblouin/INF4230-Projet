@@ -37,6 +37,8 @@
     </nav>
 	
 	<div class="container">
+		Choisir le csp : <select ng-click="getCSP(choix)" ng-model="choix" data-ng-options="choix for choix in choixCsp"></select>
+		<br/>
 		Nombre d'employé : {{professeurs.length}}
 		<table class="table table-bordered" >
 			<tr>
@@ -44,7 +46,8 @@
 				<th>Titre</th>
 				<th>Cours passé</th>
 				<th>Le(s) cours désiré(s)</th>
-				<th>Nombre cours assigné</th>
+				<!--<th>Ajouter</th>-->
+				<th>Nbr de cours désirés</th>
 				<th>Mauvaise évaluation</th>
 			</tr>
 			<tr ng-repeat="professeur in professeurs">
@@ -56,10 +59,17 @@
 					<span ng-if="!coursPasse">Aucun</span>
 				</td>
 				<td>
-					<span ng-repeat="unCoursDesire in professeur.coursDesires">{{unCoursDesire}}{{$last ? ".":", "}}</span>
+					<span ng-repeat="coursDesire in professeur.coursDesires">{{coursDesire}}{{$last ? ".":", "}}</span>
 				</td>
+				<!--<td>
+					<span>
+						<select data-ng-options="cours.sigle for cours in cours" data-ng-model="sigle" ng-change="professeur.coursDesires.push(sigle.sigle);"></select>
+					<span/>
+				</td>-->
 				<td>
 					{{professeur.nombreCoursDesires}}
+					<button ng-if="professeur.nombreCoursDesires<professeur.coursDesires.length" class="glyphicon glyphicon-plus" ng-click="professeur.nombreCoursDesires = professeur.nombreCoursDesires+1" />
+					<button ng-if="professeur.nombreCoursDesires>0" class="glyphicon glyphicon-minus" ng-click="professeur.nombreCoursDesires = professeur.nombreCoursDesires-1" />
 				</td>
 				<td>
 					<span 	ng-if="mauvaiseEval = professeur.mauvaiseEvaluation.length > 0" 
@@ -75,10 +85,12 @@
 			<table class="table table-bordered" >
 				<tr>
 					<th>Employé</td>
+					<th>Nbr de cours assignés</th>
 					<th>Cours assigné</th>
 				</tr>
 				<tr ng-repeat="professeur in professeurs">
 					<td>{{professeur.nom}}</td>
+					<td><b>{{grilleHoraire[professeur.id].length}}/{{professeur.nombreCoursDesires}}</b></td>
 					<td>
 						<div class="col-md-6" ng-repeat="unCoursAssigne in grilleHoraire[professeur.id]">{{unCoursAssigne}}{{$last ? ".":", "}}
 							<table class="table table-bordered" >
@@ -96,6 +108,7 @@
 		<script src="bower_components/js/jquery-1.11.1.min.js"></script>
 		<script src="bower_components/js/bootstrap.min.js"></script>
 		<script src="bower_components/angular/angular.js"></script>
+		<script src="bower_components/angular/ui-bootstrap.js"></script>
 		<script src="bower_components/angular-route/angular-route.js"></script>
 		<script src="js/app.js"></script>
 		<script src="js/controllers/controllers.js"></script>
