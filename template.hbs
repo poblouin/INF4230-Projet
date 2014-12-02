@@ -1,5 +1,5 @@
 {
-    "professeurs" : [
+    "professeurs": [
         {{#repeat 5}}
             {
                 "id": "prof{{uniqueIndex}}",
@@ -7,9 +7,53 @@
                 "coursDesires": [{{cours 3 6}}],
                 "niveau": 1,
                 "coursSessionDerniere": [{{coursSessionDerniere}}],
-                "mauvaiseEvaluation": [],
-                "nombreCoursDesires": 2,
+                "mauvaiseEvaluation": [{{mauvaiseEvaluation}}],
+                "nombreCoursDesires": {{number 1 2}},
                 "nombreCoursAssignes": 0
+            }
+        {{/repeat}},
+        {{#repeat 5}}
+            {
+                "id": "prof{{uniqueIndex}}",
+                "name": "{{firstName}} {{lastName}}",
+                "coursDesires": [{{cours 6 10}}],
+                "niveau": 1,
+                "coursSessionDerniere": [{{coursSessionDerniere}}],
+                "mauvaiseEvaluation": [{{mauvaiseEvaluation}}],
+                "nombreCoursDesires": {{number 3 4}},
+                "nombreCoursAssignes": 0
+            }
+        {{/repeat}},
+        {{#repeat 10}}
+            {
+                "id": "prof{{uniqueIndex}}",
+                "name": "{{firstName}} {{lastName}}",
+                "coursDesires": [{{cours 3 6}}],
+                "niveau": 2,
+                "coursSessionDerniere": [{{coursSessionDerniere}}],
+                "mauvaiseEvaluation": [{{mauvaiseEvaluation}}],
+                "nombreCoursDesires": {{number 1 2}},
+                "nombreCoursAssignes": 0
+            }
+        {{/repeat}},
+            {
+                "id": "prof{{uniqueIndex}}",
+                "name": "{{firstName}} {{lastName}}",
+                "coursDesires": [{{cours 1 2}}],
+                "niveau": 3,
+                "coursSessionDerniere": [],
+                "mauvaiseEvaluation": [],
+                "nombreCoursDesires": 1,
+                "nombreCoursAssignes": 0
+            }
+    ],
+    "coursDisponibles": [
+        {{#repeat 51}}
+            {
+                "id": "{{id_cours}}",
+                "sigle": "{{sigle}}",
+                "jour": "{{jour}}",
+                "periode": "{{periode}}"
             }
         {{/repeat}}
     ]
