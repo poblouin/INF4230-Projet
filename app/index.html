@@ -37,7 +37,7 @@
     </nav>
 	
 	<div class="container">
-		Choisir le csp : <select ng-click="getCSP(choix)" ng-model="choix" data-ng-options="choix for choix in choixCsp"></select>
+		Choisir le csp : <select ng-click="getCSP(choix);" ng-model="choix" data-ng-options="choix for choix in choixCsp"></select>
 		<br/>
 		Nombre d'employé : {{professeurs.length}}
 		<table class="table table-bordered" >
@@ -79,7 +79,7 @@
 			</tr>
 		</table>
 		
-		<button ng-click="generer();">Générer l'assignation</button>
+		<button ng-if="cspChoisi" ng-click="generer();">Générer l'assignation</button>
 		
 		<div ng-if="genererBool">
 			<table class="table table-bordered" >

@@ -44,7 +44,7 @@ exports.getCours = function(req, res) {
 exports.postCSP = function(req, res) {
 	csp = req.body.csp;
 	console.log(csp);
-	res.send(200);
+	res.sendStatus(200);
 }
 
 //Récupère le module de csp et fait appel à la fonction search

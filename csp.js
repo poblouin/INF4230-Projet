@@ -778,5 +778,6 @@ var test = search(csp);
 console.log(test);
 
 exports.search = function (cspSend){
-    return search(cspSend);
+	csp = cspSend;
+    return search(csp);
 }

@@ -7,6 +7,7 @@ var horaireControllers = angular.module('horaireControllers', []);
 horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
   function($scope, $http) {
     $scope.professeurs = [];
+	$scope.cspChoisi = false;
 	$scope.csp = {};
 	$scope.grilleHoraire;
 	$scope.choixCsp = [1];
@@ -19,6 +20,7 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 	
 	$scope.getCSP = function(index){
 		if(index){
+			$scope.cspChoisi=true
 			$http.get('/api/CSPs/' + parseInt(index)).
 			success(function(data, status, headers, config) {	
 				$scope.csp = data;
