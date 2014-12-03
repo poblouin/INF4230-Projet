@@ -1,10 +1,10 @@
 {
     "professeurs": [
-        {{#repeat 5}}
+        {{#repeat 35}}
             {
                 "id": "prof{{uniqueIndex}}",
                 "name": "{{firstName}} {{lastName}}",
-                "coursDesires": [{{cours 3 6}}],
+                "coursDesires": [{{cours 4 6}}],
                 "niveau": 1,
                 "coursSessionDerniere": [{{coursSessionDerniere}}],
                 "mauvaiseEvaluation": [{{mauvaiseEvaluation}}],
@@ -12,11 +12,11 @@
                 "nombreCoursAssignes": 0
             }
         {{/repeat}},
-        {{#repeat 5}}
+        {{#repeat 35}}
             {
                 "id": "prof{{uniqueIndex}}",
                 "name": "{{firstName}} {{lastName}}",
-                "coursDesires": [{{cours 6 10}}],
+                "coursDesires": [{{cours 7 10}}],
                 "niveau": 1,
                 "coursSessionDerniere": [{{coursSessionDerniere}}],
                 "mauvaiseEvaluation": [{{mauvaiseEvaluation}}],
@@ -24,11 +24,11 @@
                 "nombreCoursAssignes": 0
             }
         {{/repeat}},
-        {{#repeat 9}}
+        {{#repeat 100}}
             {
                 "id": "prof{{uniqueIndex}}",
                 "name": "{{firstName}} {{lastName}}",
-                "coursDesires": [{{cours 3 6}}],
+                "coursDesires": [{{cours 4 6}}],
                 "niveau": 2,
                 "coursSessionDerniere": [{{coursSessionDerniere}}],
                 "mauvaiseEvaluation": [{{mauvaiseEvaluation}}],
@@ -48,7 +48,7 @@
             }
     ],
     "coursDisponibles": [
-        {{#repeat 51}}
+        {{#repeat 1000}}
             {
                 "id": "{{id_cours}}",
                 "sigle": "{{sigle}}",

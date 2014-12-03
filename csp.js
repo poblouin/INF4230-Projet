@@ -49,7 +49,10 @@ CHARGE_DE_COURS = 1;
 var csp = {};
 // *** ATTENTION SI GENERATEUR DONNE DES DONNÉES FAUSE LE SERVEUR NE PARTIRA PAS ***
 //csp = require('./generateur/generateur.js').csp;
-//console.log(csp)
+/*var fs = require('fs');
+var json = fs.readFileSync('./csp.json', {encoding: 'utf8'});
+csp = JSON.parse(json);*/
+
 // =================================================
 // Section des algorithmes: Cette section va rester!
 // =================================================
@@ -67,33 +70,28 @@ var csp = {};
 //    prof3: []
 //};
 function search(csp) {
-    var assignment = {},
-        assignment_prof,
-        assignment_charge;
+    var assignment;
     var professeurs = csp["professeurs"];
 
     if(validerMaxCours(professeurs)) {
-        assignment_prof = initialiserAssignment(professeurs, PROFESSEUR);
-        assignment_charge = initialiserAssignment(professeurs, CHARGE_DE_COURS);
+        assignment = initialiserAssignment(professeurs);
 
         // On trie le tableau de professeurs dans l'objet csp selon le niveau en ordre décroissant.
         // directeur > professeur > chargé de cours
         professeurs.sort(function(a, b) {return b['niveau']-a['niveau']}); // TODO : Utiliser efficacement ce tri. Note à moi-même (P-O)
 
-        if(professeurs[0]['niveau'] === DIRECTEUR) assignment = assignerDirecteur(csp);
+        if(professeurs[0]['niveau'] === DIRECTEUR) assignerDirecteur(csp, assignment);
     } else
         throw 'Un directeur peut donné un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
-    backtrackingSearch(csp, assignment_prof, PROFESSEUR);
-    var res = mergeAssignments(assignment_prof, assignment_charge);
-    console.log("prof ok")
-    backtrackingSearch(csp, res, CHARGE_DE_COURS);
+    backtrackingSearch(csp, assignment, PROFESSEUR);
+    backtrackingSearch(csp, assignment, CHARGE_DE_COURS);
 
-    return mergeAssignments(assignment, res);
+    return assignment;
 }
 
 function backtrackingSearch(csp, assignment, niveau) {
-    if (isComplete(assignment)) return assignment;
+    if (isComplete(assignment, niveau)) return assignment;
 
     var professeur = selectNextUnassignedVariable(csp, niveau);
     var domaineProfesseur = orderDomainValues(professeur, assignment, csp);
@@ -139,12 +137,12 @@ function isAssigned(professeur) {
 
 // Un 'assignment' est complet si chacun des professeurs a un cours assigné. Ceci est construit de façon à
 // pouvoir permettre un nombre illimité de professeurs.
-function isComplete(assignment) {
+function isComplete(assignment, niveau) {
     var professeurs = csp["professeurs"];
 
     for (var prof in assignment) {
         var professeur = getProfesseurById(csp, prof);
-        if (!isAssigned(professeur)) return false;
+        if (!isAssigned(professeur) && professeur['niveau'] === niveau) return false;
     }
     return true;
 };
@@ -229,18 +227,17 @@ function trouverMaxCoursDesires(professeurs, niveau) {
 };
 
 // Initialise assignment
-function initialiserAssignment(professeurs, niveau) {
+function initialiserAssignment(professeurs) {
     var assignment = {};
 
     for (var i = 0; i < professeurs.length; i++) {
-        if(professeurs[i]['niveau'] === niveau) {
-            var professeur = professeurs[i]['id'];
-            assignment[professeur] = [];
-        }
+        var professeur = professeurs[i]['id'];
+        assignment[professeur] = [];
     }
     return assignment;
 };
 
+// TODO : **POSSIBLEMENT USELESS**
 function mergeAssignments(assign1,assign2) {
     var assignment = {};
     for (var prof in assign1) assignment[prof] = assign1[prof];
@@ -377,13 +374,11 @@ function prioriteCoursDerniereSession(professeur, csp) {
 
 // Assigne le cours choisi au directeur et le retire des coursDesires des professeurs qui l'ont.
 // Cette fonction assume qu'il n'y a qu'un seul directeur, car dans la réalité il n'y en a qu'un seul!
-function assignerDirecteur(csp) {
+function assignerDirecteur(csp, assignment) {
     var professeurs = csp['professeurs'];
     var directeur = professeurs[0]; // tableau trié, le directeur sera toujours le premier, s'il existe.
     var cours = directeur['coursDesires'][0] // Peu importe le nombre de choix, son premier choix est toujours celui qu'il aura.
-    var assignment = {};
 
-    assignment[directeur['id']] = []
     addAssignment(directeur, cours, assignment);
 
     for(var i = 0; i < professeurs.length; i++) {
@@ -401,7 +396,6 @@ function assignerDirecteur(csp) {
             if(index >= 0) coursSessionDerniere.splice(index, 1);
         }
     }
-    return assignment;
 };
 
 // =================================================
