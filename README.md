@@ -3,7 +3,7 @@ Entrer la commande npm start
 Si message d'erreur, veuillez telecharger les fichiers manquant avec npm
 	ex: npm intall (moduleManquant)
 
-Pour debug : npm install -g node-inspector apres npm-debug server.js
+Pour debug : https://www.npmjs.org/package/node-inspector
 
 Les requetes disponible
  - /index.html -> Affiche l'interface pour l'utilisateur
