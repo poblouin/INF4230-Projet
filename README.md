@@ -9,6 +9,8 @@ Les requetes disponible
  - /index.html -> Affiche l'interface pour l'utilisateur
  - /api/CSP -> retourne la solution du csp
  - /CSPs/:index -> retourne le csp dans le dossier spécifié
- 
- Post: 
+
+ Post:
  -api/createCSP -> modifie le CSP
+
+**N.B** Le fichier cours.hbs est pour générer des cours sur http://www.json-generator.com/

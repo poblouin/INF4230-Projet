@@ -47,9 +47,8 @@ PROFESSEUR = 2,
 CHARGE_DE_COURS = 1;
 
 var csp = {};
-
 // *** ATTENTION SI GENERATEUR DONNE DES DONNÉES FAUSE LE SERVEUR NE PARTIRA PAS ***
-//csp = require('./generateur.js').csp;
+//csp = require('./generateur/generateur.js').csp;
 //console.log(csp)
 // =================================================
 // Section des algorithmes: Cette section va rester!
@@ -87,6 +86,7 @@ function search(csp) {
 
     backtrackingSearch(csp, assignment_prof, PROFESSEUR);
     var res = mergeAssignments(assignment_prof, assignment_charge);
+    console.log("prof ok")
     backtrackingSearch(csp, res, CHARGE_DE_COURS);
 
     return mergeAssignments(assignment, res);
@@ -475,8 +475,8 @@ function validerMaxCours(professeurs) {
 // Tests!
 debugger;
 // *** ATTENTION SI GENERATEUR DONNE DES DONNÉES FAUSE LE SERVEUR NE PARTIRA PAS ***
-//var test = search(csp);
-//console.log(test);
+/*var test = search(csp);
+console.log(test);*/
 
 exports.search = function (cspSend){
 	csp = cspSend;

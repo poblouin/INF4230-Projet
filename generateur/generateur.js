@@ -1,9 +1,10 @@
 var fs = require('fs');
 var dummyjson = require('dummy-json');
-var template = fs.readFileSync('template.hbs', {encoding: 'utf8'});
+var template = fs.readFileSync('./generateur/template.hbs', {encoding: 'utf8'});
 
 // Data
-var data = {
+var data = require('./data_generateur.js').data;
+/*{
     cours : ["INF1120-10",
              "INF2120-20",
              "INF2160-30",
@@ -108,7 +109,7 @@ var data = {
              "BIF7101"],
     jours : ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
     periodes : ["AM", "PM", "SOIR"]
-};
+};*/
 
 // Global vars
 var array = []; // Utile pour fonction helpers coursSessionDerniere().
