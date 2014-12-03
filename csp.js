@@ -46,8 +46,11 @@ var DIRECTEUR = 3,
 PROFESSEUR = 2,
 CHARGE_DE_COURS = 1;
 
-var csp = require('./generateur.js').csp;
-// console.log(csp)
+var csp = {};
+
+// *** ATTENTION SI GENERATEUR DONNE DES DONNÉES FAUSE LE SERVEUR NE PARTIRA PAS ***
+//csp = require('./generateur.js').csp;
+//console.log(csp)
 // =================================================
 // Section des algorithmes: Cette section va rester!
 // =================================================
@@ -471,8 +474,9 @@ function validerMaxCours(professeurs) {
 
 // Tests!
 debugger;
-var test = search(csp);
-console.log(test);
+// *** ATTENTION SI GENERATEUR DONNE DES DONNÉES FAUSE LE SERVEUR NE PARTIRA PAS ***
+//var test = search(csp);
+//console.log(test);
 
 exports.search = function (cspSend){
 	csp = cspSend;
