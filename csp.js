@@ -51,7 +51,7 @@ var csp = {};
 // *** ATTENTION SI GENERATEUR DONNE DES DONNÉES FAUSE LE SERVEUR NE PARTIRA PAS ***
 //csp = require('./generateur/generateur.js').csp;
 //var fs = require('fs');
-//var json = fs.readFileSync('./csp.json', {encoding: 'utf8'});
+//var json = fs.readFileSync('./test/csp.json', {encoding: 'utf8'});
 //csp = JSON.parse(json);
 
 // =================================================
