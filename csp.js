@@ -49,8 +49,12 @@ CHARGE_DE_COURS = 1;
 var csp = {};
 
 // *** ATTENTION SI GENERATEUR DONNE DES DONNÉES FAUSE LE SERVEUR NE PARTIRA PAS ***
-//csp = require('./generateur/generateur.js').csp;
-//var fs = require('fs');
+
+//csp = require('./generateur/generateur.js').csp; // Uncomment pour utiliser le générateur.
+
+// OU
+
+//var fs = require('fs');   // Uncomment ces 3 lignes pour utiliser les fichiers tests csp.json ou csp2.json qui sont 2 problème solvable généré par le générateur
 //var json = fs.readFileSync('./test/csp.json', {encoding: 'utf8'});
 //csp = JSON.parse(json);
 
@@ -85,7 +89,7 @@ function search(csp) {
     } else
         throw 'Un directeur peut donné un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
-    // Résolution par 'Hill climbing - Random restart'    
+    // Résolution par 'Hill climbing - Random restart'
     //return randomHillClimbingSearch(csp, assignment, 500000);
 
     // Résolution par 'Backtracking search'
@@ -117,7 +121,7 @@ function randomHillClimbingSearch(csp, assignment, iterLimit) {
     return assignmentCopy;
 }
 
-function hillClimbing(csp, assignment) {        
+function hillClimbing(csp, assignment) {
     while (true) {
         /* Uglyness! Pas le choix si je veux pas modifier selectNextUnassignedVariable() */
         var professeur = selectNextUnassignedVariable(csp, PROFESSEUR);
@@ -526,4 +530,3 @@ exports.search = function (cspSend){
 	console.log("temps d'execution: " + ret.tempsExecution + "ms");
     return ret;
 }
-
