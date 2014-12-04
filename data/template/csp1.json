@@ -61,7 +61,7 @@
         "nombreCoursAssignes": 0
     }
     ],
-    coursDisponibles: [
+    "coursDisponibles": [
     {
         "id": "inf1120-00",
         "sigle": "INF1120",

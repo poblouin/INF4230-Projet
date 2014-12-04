@@ -28,7 +28,9 @@ api.post("/createCSP", generateurHoraire.postCSP);
 api.get("/CSP", generateurHoraire.getGenerer);
 api.get("/CSPs/:index", generateurHoraire.getCSPIndex);
 
-app.use(bodyParser.json());
+app.use(bodyParser({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb'}));
+app.use(bodyParser.json({limit: '50mb'}));
 
 app.use("/api", api);
 

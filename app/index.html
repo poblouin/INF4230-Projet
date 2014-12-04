@@ -40,23 +40,29 @@
 		Choisir le csp : <select ng-click="getCSP(choix);" ng-model="choix" data-ng-options="choix for choix in choixCsp"></select>
 		<br/>
 		Nombre d'employé : {{professeurs.length}}
-		<table class="table table-bordered" >
+		<br/>
+		Nombre de cours à distribuer : {{nombreCoursADistribue}}/{{cours.length}}
+		<br/>
+		<a href="" ng-show="!cacher" ng-click="cacher = !cacher">Cacher</a>
+		<a href="" ng-show="cacher" ng-click="cacher = !cacher">Afficher</a>
+		<table class="table table-bordered" ng-show="!cacher">
 			<tr>
 				<th>Employé</td>
-				<th>Titre</th>
+				<th><a href="" ng-click="ordre = ordre.charAt(0)=='-'?'niveau':'-niveau'">Titre</th>
+				</th>
 				<th>Cours passé</th>
 				<th>Le(s) cours désiré(s)</th>
 				<!--<th>Ajouter</th>-->
 				<th>Nbr de cours désirés</th>
 				<th>Mauvaise évaluation</th>
 			</tr>
-			<tr ng-repeat="professeur in professeurs">
+			<tr ng-repeat="professeur in professeurs | orderBy:ordre">
 				<td>{{professeur.nom}}</td>
 				<td>{{professeur.niveau==3 ? "Directeur" : professeur.niveau==2 ? "Professeur" : "Chargé de cours"}}</td>
 				<td>
-					<span 	ng-if="coursPasse = professeur.coursSessionDerniere.length > 0" 
+					<span 	ng-if="professeur.coursSessionDerniere.length > 0" 
 							ng-repeat="unCoursDernier in professeur.coursSessionDerniere">{{unCoursDernier}}{{$last ? ".":", "}}</span>
-					<span ng-if="coursPasse">Aucun</span>
+					<span ng-if="professeur.coursSessionDerniere.length == 0">Aucun</span>
 				</td>
 				<td>
 					<span ng-repeat="coursDesire in professeur.coursDesires">{{coursDesire}}{{$last ? ".":", "}}</span>
@@ -68,13 +74,13 @@
 				</td>-->
 				<td>
 					{{professeur.nombreCoursDesires}}
-					<button ng-if="professeur.nombreCoursDesires<professeur.coursDesires.length" class="glyphicon glyphicon-plus" ng-click="professeur.nombreCoursDesires = professeur.nombreCoursDesires+1" />
-					<button ng-if="professeur.nombreCoursDesires>0" class="glyphicon glyphicon-minus" ng-click="professeur.nombreCoursDesires = professeur.nombreCoursDesires-1" />
+					<button ng-if="professeur.nombreCoursDesires<professeur.coursDesires.length" class="glyphicon glyphicon-plus" ng-click="professeur.nombreCoursDesires = professeur.nombreCoursDesires+1; nombreCoursADistribuer();" />
+					<button ng-if="professeur.nombreCoursDesires>0" class="glyphicon glyphicon-minus" ng-click="professeur.nombreCoursDesires = professeur.nombreCoursDesires-1; nombreCoursADistribuer();" />
 				</td>
 				<td>
-					<span 	ng-if="mauvaiseEval = professeur.mauvaiseEvaluation.length > 0" 
+					<span 	ng-if="professeur.mauvaiseEvaluation.length > 0" 
 							ng-repeat="coursMauvaiseEval in professeur.mauvaiseEvaluation">{{coursMauvaiseEval}}{{$last ? ".":", "}}</span>
-					<span ng-if="!mauvaiseEval">Aucune</span>
+					<span ng-if="professeur.mauvaiseEvaluation.length == 0">Aucune</span>
 				</td>
 			</tr>
 		</table>
@@ -82,14 +88,30 @@
 		<button ng-if="cspChoisi" ng-click="generer();">Générer l'assignation</button>
 		
 		<div ng-if="genererBool">
+			Temps d'exécution : {{grilleHoraire.tempsExecution}}ms
+			<br/>
+			<a href="" ng-click="cacherSigleN = !cacherSigleN">Nombre de cours non attribué : {{coursNonAttribues.length}}</a>
+			<table class="table table-bordered" ng-show="cacherSigleN">
+				<tr>
+					<th>Sigle</td>
+				</tr>
+				<tr>
+					<td><span ng-repeat="coursNonAttribue in coursNonAttribues">{{coursNonAttribue.sigle}}{{$last ? ".":", "}}</span></td>
+				</tr>
+			</table>
+			
+			<br/>
+			
 			<table class="table table-bordered" >
 				<tr>
 					<th>Employé</td>
+					<th><a href="" ng-click="tri = tri.charAt(0)=='-'?'niveau':'-niveau'">Titre</th>
 					<th>Nbr de cours assignés</th>
 					<th>Cours assigné</th>
 				</tr>
-				<tr ng-repeat="professeur in professeurs">
+				<tr ng-repeat="professeur in professeurs | orderBy:tri" ng-style="grilleHoraire[professeur.id].length == professeur.nombreCoursDesires ? {'color':'black'} : {'color':'red'}">
 					<td>{{professeur.nom}}</td>
+					<td>{{professeur.niveau==3 ? "Directeur" : professeur.niveau==2 ? "Professeur" : "Chargé de cours"}}</td>
 					<td><b>{{grilleHoraire[professeur.id].length}}/{{professeur.nombreCoursDesires}}</b></td>
 					<td>
 						<div class="col-md-6" ng-repeat="unCoursAssigne in grilleHoraire[professeur.id]">{{unCoursAssigne}}{{$last ? ".":", "}}

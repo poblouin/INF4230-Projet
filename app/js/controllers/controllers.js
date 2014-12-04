@@ -7,15 +7,39 @@ var horaireControllers = angular.module('horaireControllers', []);
 horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
   function($scope, $http) {
     $scope.professeurs = [];
+	$scope.cours = [];
+	$scope.nombreCoursADistribue = 0;
+	$scope.coursNonAttribues = [];
 	$scope.cspChoisi = false;
+	$scope.cacher = false;
 	$scope.csp = {};
 	$scope.grilleHoraire;
-	$scope.choixCsp = [1,2];
+	$scope.choixCsp = [1,2,3,4];
 	
-	$scope.getInfo = function(cours){
-		for(var i = 0; i < $scope.cours.length; i++){
-			if($scope.cours[i].id == cours) return $scope.cours[i];
-		}
+	$scope.getInfo = function(coursId){
+		$scope.cours.forEach(function(cours, i){
+			if(cours.id == coursId) {
+				enlever(cours);
+				return cours;
+			};
+		});
+	}
+	
+	var enlever = function(coursEnleve) {
+		$scope.coursNonAttribues.forEach(function(cours, i){
+			if(cours.id == coursEnleve.id) {
+				$scope.coursNonAttribues.splice(i,1);
+				return;
+			};
+		});
+	}
+	
+	$scope.nombreCoursADistribuer = function(){
+		var coursADistribuer = 0;
+		$scope.professeurs.forEach(function(professeur){
+			coursADistribuer = coursADistribuer + professeur.nombreCoursDesires;
+		});
+		$scope.nombreCoursADistribue = coursADistribuer;
 	}
 	
 	$scope.getCSP = function(index){
@@ -26,7 +50,9 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 				$scope.genererBool=false;			
 				$scope.csp = data;
 				$scope.professeurs = data.professeurs;
+				$scope.nombreCoursADistribuer();
 				$scope.cours = data.coursDisponibles;
+				$scope.coursNonAttribues = angular.copy(data.coursDisponibles);
 			}).
 			error(function(data, status, headers, config) {
 				console.log("ERREUR");
@@ -39,7 +65,7 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 		({	
 			method: 'post',
 			url:'/api/createCSP',
-			params: {csp: $scope.grilleHoraire},
+			//params: {csp: $scope.grilleHoraire},
 			data: {
                         csp: $scope.csp
                     }
