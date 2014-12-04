@@ -47,6 +47,7 @@ PROFESSEUR = 2,
 CHARGE_DE_COURS = 1;
 
 var csp = {};
+
 // *** ATTENTION SI GENERATEUR DONNE DES DONNÉES FAUSE LE SERVEUR NE PARTIRA PAS ***
 //csp = require('./generateur/generateur.js').csp;
 //var fs = require('fs');
@@ -84,10 +85,55 @@ function search(csp) {
     } else
         throw 'Un directeur peut donné un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
+    // Résolution par 'Hill climbing - Random restart'    
+    //return randomHillClimbingSearch(csp, assignment, 5000);
+
+    // Résolution par 'Backtracking search'
     backtrackingSearch(csp, assignment, PROFESSEUR);
     backtrackingSearch(csp, assignment, CHARGE_DE_COURS);
 
     return assignment;
+}
+
+// Pour l'instant, ceci va boucler infiniment si le problème CSP n'a pas de solution.
+// TODO: Ajouter un timer qui va donner aucune solution si ça dépasse n secondes.
+function randomHillClimbingSearch(csp, assignment, iterLimit) {
+    var counter = 0;
+    var assignmentCopy;
+    var cspCopy;
+    var result;
+
+    do {
+        if (counter++ >= iterLimit) return undefined;
+
+        assignmentCopy = JSON.parse(JSON.stringify(assignment));
+        cspCopy = JSON.parse(JSON.stringify(csp));
+        result = hillClimbing(cspCopy, assignmentCopy);
+    } while (!result);
+
+    // Itérations nécessaires pour résoudre le problème
+    //console.log(counter);
+
+    return assignmentCopy;
+}
+
+function hillClimbing(csp, assignment) {        
+    while (true) {
+        /* Uglyness! Pas le choix si je veux pas modifier selectNextUnassignedVariable() */
+        var professeur = selectNextUnassignedVariable(csp, PROFESSEUR);
+        if (!professeur) {
+            professeur = selectNextUnassignedVariable(csp, CHARGE_DE_COURS);
+            if (!professeur) return assignment;
+        }
+
+        var domaineProfesseur = orderDomainValues(professeur, assignment, csp);
+        // Assigne un cours aléatoirement depuis la liste des cours désirés<
+        var randomId = Math.floor(Math.random() * domaineProfesseur.length);
+        var cours = getCoursById(csp, domaineProfesseur[randomId]);
+
+        if (!isConsistent(cours, professeur, assignment)) return undefined;
+        addAssignment(professeur, cours["id"], assignment);
+    }
 }
 
 function backtrackingSearch(csp, assignment, niveau) {
@@ -467,10 +513,10 @@ function validerMaxCours(professeurs) {
 
 
 // Tests!
-debugger;
+//debugger;
 // *** ATTENTION SI GENERATEUR DONNE DES DONNÉES FAUSE LE SERVEUR NE PARTIRA PAS ***
-/*var test = search(csp);
-console.log(test);*/
+//var test = search(csp);
+//console.log(test);
 
 exports.search = function (cspSend){
 	csp = cspSend;
@@ -480,3 +526,4 @@ exports.search = function (cspSend){
 	console.log("temps d'execution: " + ret.tempsExecution + "ms");
     return ret;
 }
+
