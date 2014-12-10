@@ -103,6 +103,9 @@ function search(csp) {
     // Ceci va briser le lien actuel entre le frontend et le backend. Je n'avais
     // pas le choix de changer ça pour un seul appel afin de faire fonctionner AC3!
     // -Sam
+    var problemeValide = arcConsistency(csp);
+    if (!problemeValide) throw "Le problème est impossible à résoudre!";  
+
 	backtrackingSearch(csp, assignment);
 
     return assignment;
@@ -112,9 +115,6 @@ function search(csp) {
 
 function backtrackingSearch(csp, assignment) {
     if (isComplete(assignment)) return assignment;
-
-    var inferences = arcConsistency(csp);
-    if (!inferences) throw "Le problème est impossible à résoudre!";    
 
     var professeur = selectNextUnassignedVariable(csp, PROFESSEUR);
     if (!professeur) professeur = selectNextUnassignedVariable(csp, CHARGE_DE_COURS);
