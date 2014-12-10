@@ -90,11 +90,15 @@ function search(csp) {
         throw 'Un directeur peut donné un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
 
     // Résolution par 'Hill climbing - Random restart'
-    //return randomHillClimbingSearch(csp, assignment, 500000);
+	if(csp["Hill climbing"]) {
+		return randomHillClimbingSearch(csp, assignment, 500000);
+	}
 
     // Résolution par 'Backtracking search'
-    backtrackingSearch(csp, assignment, PROFESSEUR);
-    backtrackingSearch(csp, assignment, CHARGE_DE_COURS);
+	if(csp["backtrackingSearch"]) {
+		backtrackingSearch(csp, assignment, PROFESSEUR);
+		backtrackingSearch(csp, assignment, CHARGE_DE_COURS);
+	}
 
     return assignment;
 }

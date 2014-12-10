@@ -15,14 +15,19 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 	$scope.csp = {};
 	$scope.grilleHoraire;
 	$scope.choixCsp = [1,2,3,4];
+	$scope.algoChx = ["backtrackingSearch", "Hill climbing", "AC3"]
 	
 	$scope.getInfo = function(coursId){
-		$scope.cours.forEach(function(cours, i){
-			if(cours.id == coursId) {
-				enlever(cours);
-				return cours;
+		for(var i = 0; i < $scope.cours.length; i++){
+			if($scope.cours[i].id == coursId) {
+				enlever($scope.cours[i]);
+				return $scope.cours[i];
 			};
-		});
+		}
+	}
+	
+	$scope.algorith = function(algoId, check){
+		$scope.csp[algoId] = check;
 	}
 	
 	var enlever = function(coursEnleve) {
