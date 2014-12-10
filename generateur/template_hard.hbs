@@ -1,0 +1,26 @@
+{
+    "professeurs": [
+    {{#repeat 14}}
+    {
+        "id": "prof{{uniqueIndex}}",
+        "name": "{{firstName}} {{lastName}}",
+        "coursDesires": [{{cours}}],
+        "niveau": 2,
+        "coursSessionDerniere": [],
+        "mauvaiseEvaluation": [],
+        "nombreCoursDesires": 1,
+        "nombreCoursAssignes": 0
+    }
+    {{/repeat}}
+    ],
+    "coursDisponibles": [
+    {{#repeat 14}}
+    {
+        "id": "{{id_cours}}",
+        "sigle": "{{sigle}}",
+        "jour": "{{jour}}",
+        "periode": "{{periode}}"
+    }
+    {{/repeat}}
+    ]
+}
