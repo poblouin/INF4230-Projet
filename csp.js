@@ -74,6 +74,13 @@ var csp = {};
 //    prof2: [],
 //    prof3: []
 //};
+
+// TODO: Il faudrait éventuellement envoyer un objet de paramètres à
+// cette fonction afin de savoir quels algorithmes de recherche utiliser
+// Je vais gosser la dessus éventuellement!
+//
+// ex: search(csp, { algo: "naif" });
+//     search(csp, { algo: "backtracking", forward: true, ac3: true };
 function search(csp) {
     var assignment;
     var professeurs = csp["professeurs"];
@@ -86,68 +93,32 @@ function search(csp) {
         professeurs.sort(function(a, b) {return b['niveau']-a['niveau']}); // TODO : Utiliser efficacement ce tri. Note à moi-même (P-O)
 
         if(professeurs[0]['niveau'] === DIRECTEUR) assignerDirecteur(csp, assignment);
-    } else
-        throw 'Un directeur peut donné un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
+    } else {
+        throw 'Un directeur peut donner un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
+    }
+    
+    // TODO: Algo naïf pour comparaisons
+    //algoMerdique(csp, assignment);
 
-    // Résolution par 'Hill climbing - Random restart'
-	if(csp["Hill climbing"]) {
-		return randomHillClimbingSearch(csp, assignment, 500000);
-	}
-
-    // Résolution par 'Backtracking search'
-	if(csp["backtrackingSearch"]) {
-		backtrackingSearch(csp, assignment, PROFESSEUR);
-		backtrackingSearch(csp, assignment, CHARGE_DE_COURS);
-	}
+    // Ceci va briser le lien actuel entre le frontend et le backend. Je n'avais
+    // pas le choix de changer ça pour un seul appel afin de faire fonctionner AC3!
+    // -Sam
+	backtrackingSearch(csp, assignment);
 
     return assignment;
 }
 
-// Pour l'instant, ceci va boucler infiniment si le problème CSP n'a pas de solution.
-// TODO: Ajouter un timer qui va donner aucune solution si ça dépasse n secondes.
-function randomHillClimbingSearch(csp, assignment, iterLimit) {
-    var counter = 0;
-    var assignmentCopy;
-    var cspCopy;
-    var result;
 
-    do {
-        if (counter++ >= iterLimit) return undefined;
 
-        assignmentCopy = JSON.parse(JSON.stringify(assignment));
-        cspCopy = JSON.parse(JSON.stringify(csp));
-        result = hillClimbing(cspCopy, assignmentCopy);
-    } while (!result);
+function backtrackingSearch(csp, assignment) {
+    if (isComplete(assignment)) return assignment;
 
-    // Itérations nécessaires pour résoudre le problème
-    //console.log(counter);
+    var inferences = arcConsistency(csp);
+    if (!inferences) throw "Le problème est impossible à résoudre!";    
 
-    return assignmentCopy;
-}
+    var professeur = selectNextUnassignedVariable(csp, PROFESSEUR);
+    if (!professeur) professeur = selectNextUnassignedVariable(csp, CHARGE_DE_COURS);
 
-function hillClimbing(csp, assignment) {
-    while (true) {
-        /* Uglyness! Pas le choix si je veux pas modifier selectNextUnassignedVariable() */
-        var professeur = selectNextUnassignedVariable(csp, PROFESSEUR);
-        if (!professeur) {
-            professeur = selectNextUnassignedVariable(csp, CHARGE_DE_COURS);
-            if (!professeur) return assignment;
-        }
-
-        var domaineProfesseur = orderDomainValues(professeur, assignment, csp);
-        // Assigne un cours aléatoirement depuis la liste des cours désirés<
-        var randomId = Math.floor(Math.random() * domaineProfesseur.length);
-        var cours = getCoursById(csp, domaineProfesseur[randomId]);
-
-        if (!isConsistent(cours, professeur, assignment)) return undefined;
-        addAssignment(professeur, cours["id"], assignment);
-    }
-}
-
-function backtrackingSearch(csp, assignment, niveau) {
-    if (isComplete(assignment, niveau)) return assignment;
-
-    var professeur = selectNextUnassignedVariable(csp, niveau);
     var domaineProfesseur = orderDomainValues(professeur, assignment, csp);
     var result;
 
@@ -158,18 +129,76 @@ function backtrackingSearch(csp, assignment, niveau) {
         addAssignment(professeur, cours["id"], assignment);
 
         if (isConsistent(cours, professeur, assignmentCopy)) {
-			//Petit probleme : quand je passe cspCopy a AC3
-			//Ceci cause des problemes avec la recursiviter
-			//Je passe donc csp directement
-			//var cspCopy = JSON.parse(JSON.stringify(csp));
-			//var cspAC3 = AC3(csp,assignment);
-            var result = backtrackingSearch(csp, assignment, niveau);
+            var result = backtrackingSearch(csp, assignment);
             if (result) break;
         }
 
         removeAssignment(professeur, cours, assignment);
     }
     return result;
+}
+
+// Implémentation de l'algorithme AC3
+// Retourne 'false' si une inconsistence à été trouvée, sinon retourne 'true'.
+function arcConsistency(csp) {
+    var queue = buildQueue(csp);  
+
+    while (queue.length != 0) {
+        var tuple = queue.shift();
+        var domain = getProfesseurById(csp, tuple["x"])["coursDesires"];
+
+        if (revise(csp, tuple)) {
+            if (domain.size == 0) return false;
+
+            for (var i = 0; i < csp["professeurs"].length; i++) {
+                var prof = csp["professeurs"][i]["id"];
+                
+                if (prof == tuple["x"] || prof == tuple["y"]) continue;
+                queue.push({x: prof, y: tuple["x"]});
+            }
+        }
+    }
+
+    return true;
+}
+
+// Est-ce qu'on doit réviser le domaine pour le rendre consistant?
+// Cette fonction gère la suppression des éléments inconsistants.
+function revise(csp, tuple) {
+    var revised = false;
+    var domainX = getProfesseurById(csp, tuple["x"])["coursDesires"];
+    var domainY = getProfesseurById(csp, tuple["y"])["coursDesires"];
+
+    for (var i = 0; i < domainX.length; i++) {
+        var value = domainX[i];
+
+        if (!validDomain(value, domainY)) {
+            domainX.splice(i, 1);
+            revised = true;
+        }
+    }
+
+    return revised;
+}
+
+// Est-ce que l'utilisation de 'value' rend 'domain' inconsistent?
+function validDomain(value, domain) {
+    if (domain.indexOf(value) != -1) return domain.length > 1; 
+    return true; 
+}
+
+// Fabrication de la queue initiale pour l'exécution de AC3.
+function buildQueue(csp) {
+    var profs = csp["professeurs"];
+    var queue = [];
+
+    for (var i = 0; i < profs.length; i++) {
+        for (var j = 0; j < profs.length; j++) {
+            if (i != j) queue.push({x: profs[i]["id"], y: profs[j]["id"]});
+        }
+    }
+
+    return queue;
 }
 
 // =================================================
@@ -191,12 +220,12 @@ function isAssigned(professeur) {
 
 // Un 'assignment' est complet si chacun des professeurs a un cours assigné. Ceci est construit de façon à
 // pouvoir permettre un nombre illimité de professeurs.
-function isComplete(assignment, niveau) {
+function isComplete(assignment) {
     var professeurs = csp["professeurs"];
 
     for (var prof in assignment) {
         var professeur = getProfesseurById(csp, prof);
-        if (!isAssigned(professeur) && professeur['niveau'] === niveau) return false;
+        if (!isAssigned(professeur)) return false;
     }
     return true;
 };
@@ -263,7 +292,7 @@ function isConsistent(cours, professeur, assignment) {
     if (mauvaiseEvaluation(cours, professeur, assignment)) return false;
     if (plageDejaAssignee(cours, professeur, assignment)) return false;
 
-    // Autres checks de contraintes...
+    // Autres checks de contraintes?
 
     return true;
 }
@@ -298,94 +327,6 @@ function mergeAssignments(assign1,assign2) {
     for (var prof in assign2) assignment[prof] = assign2[prof];
     return assignment;
 };
-
-
-// =================================================
-//      Section fonctions AC3
-// =================================================
-
-//Passe une copie de csp
-function AC3 (csp, assignment){
-	var queue = remplirQueue(csp);
-	while(queue.length != 0){
-		var arcATraiter = queue.pop();
-		// On verifie si il y a des valeurs inconsistentes
-		if (removeValeurInconsistentes (csp, arcATraiter,assignment)){
-			// Si oui, alors on ajoute la paire inverse a la queue
-			var queueArc = new Array();
-			queueArc.push(arcATraiter[1]);
-			queueArc.push(arcATraiter[0]);
-			queue.push(queueArc);
-			// Verifie que le prof auquel on a supprimer le cours
-			// ne possede pas 0 de length.
-			var verificationProf = getProfesseurById(csp,arcATraiter[1])
-			if(verificationProf["coursDesires"].length == 0)
-			{
-				return undefined;
-			}
-		}
-	}
-	return csp;
-}
-
-//Fonction qui supprime le cours identique dans xi
-//si le domaine de xi est plus grand que le domaine de xj
-//Cependant, je ne suis pas sur si c'est assez, c'est ce que moi
-//et richard ont compris.
-function removeValeurInconsistentes (csp, arcATraiter,assignment){
-	var removed = false;
-	var arcXi = getProfesseurById(csp, arcATraiter[0]);
-	var arcXj = getProfesseurById(csp, arcATraiter[1]);
-
-	var profAssignement = undefined;
-	for ( var profId in assignment ){
-		if(arcXi.id == profId){
-			 profAssignement = profId;
-		}
-	}
-	if(!profAssignement) return;
-
-	//Domaine xi (Cours de arcXi) : correspond a profAssignement pour l'assignment
-	for(i = 0 ; i < assignment[profAssignement].length; i++){
-		//Domaine xj (Cours de arcXj)
-		for(j = 0 ; j < arcXj["coursDesires"].length; j++){
-			//Verifier si un cours de xi se retrouve dans xj
-			//Si oui, alors on l'enleve de xj.
-			if(assignment[profAssignement][i] == arcXj["coursDesires"][j])
-			{
-				arcXj["coursDesires"].splice(j,1);
-				removed = true;
-
-			}
-		}
-	}
-	return removed;
-}
-
-
-//Fonction qui cree des pairs d'arcs avec les id des profs.
-//Retourne une queue remplis des arcs
-// donne : [ 'prof1', 'prof2' ]
-function remplirQueue (csp){
-	var queue = new Array();
-	var professeurs = csp["professeurs"];
-	for ( i = 0 ; i < professeurs.length; i++)
-	{
-		for( j = 0 ; j < professeurs.length; j++){
-			//Creation d'un array temporaire pour "holder" les pairs
-			var queueArc = new Array();
-			if(professeurs[i].id != professeurs[j].id)
-			{
-				queueArc.push(professeurs[i].id)
-				queueArc.push(professeurs[j].id);
-				// On push alors les pair dans l'array que l'on retourne a la fin
-				queue.push(queueArc);
-			}
-		}
-	}
-	return queue;
-}
-
 
 // =================================================
 //      Section des fonctions d'heuristiques
@@ -534,3 +475,4 @@ exports.search = function (cspSend){
 	console.log("temps d'execution: " + ret.tempsExecution + "ms");
     return ret;
 }
+
