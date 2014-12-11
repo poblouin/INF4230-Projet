@@ -47,7 +47,7 @@ csp = JSON.parse(json);*/
 //
 // ex: search(csp, { algo: "naif" });
 //     search(csp, { algo: "backtracking", forward: true, ac3: true };
-function search(csp) {
+function search(csp, ac3) {
     var assignment;
     var professeurs = csp["professeurs"];
 
@@ -63,14 +63,10 @@ function search(csp) {
         throw 'Un directeur peut donner un seul cours, un professeur peut donner un maximum de 2 cours et un chargé de cours un maximum de 4 cours.';
     }
 
-    // TODO: Algo naïf pour comparaisons
-    //algoMerdique(csp, assignment);
-
-    // Ceci va briser le lien actuel entre le frontend et le backend. Je n'avais
-    // pas le choix de changer ça pour un seul appel afin de faire fonctionner AC3!
-    // -Sam
-    var problemeValide = arcConsistency(csp);
-    if (!problemeValide) throw "Le problème est impossible à résoudre!";
+    if (ac3) {
+        var problemeValide = arcConsistency(csp);
+        if (!problemeValide) throw "Le problème est impossible à résoudre!";
+    }
 
 	backtrackingSearch(csp, assignment);
 
