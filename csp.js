@@ -31,9 +31,7 @@ CHARGE_DE_COURS = 1;
 
 var csp = {};
 
-// TODO: Effacer ceci avant la remise quand front-end sera 100% fonctionnel.
-//csp = require('./generateur/generateur_hard.js').csp; // Uncomment pour utiliser le générateur.
-
+// TODO : Je laisse ceci pour sortir les stats ce soir.
 /*var fs = require('fs');   // Uncomment ces 3 lignes pour utiliser les fichiers tests csp.json ou csp2.json qui sont 2 problème solvable généré par le générateur
 var json = fs.readFileSync('./test/csp_hard_4.json', {encoding: 'utf8'});
 csp = JSON.parse(json);*/
@@ -41,12 +39,8 @@ csp = JSON.parse(json);*/
 // =================================================
 //              Section des algorithmes
 // =================================================
-// TODO: Il faudrait éventuellement envoyer un objet de paramètres à
-// cette fonction afin de savoir quels algorithmes de recherche utiliser
-// Je vais gosser la dessus éventuellement!
-//
-// ex: search(csp, { algo: "naif" });
-//     search(csp, { algo: "backtracking", forward: true, ac3: true };
+// usage: search(csp) // Recherche SANS le AC3.
+//        search(csp, true) // Recherche AVEC le AC3.
 function search(csp, ac3) {
     var assignment;
     var professeurs = csp["professeurs"];
