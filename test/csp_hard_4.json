@@ -1,0 +1,84 @@
+{
+    "professeurs": [
+        {
+            "id": "prof0",
+            "name": "Leanne Flinn",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40",
+                "GEO1200-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof1",
+            "name": "Edward Young",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof2",
+            "name": "Haydee Milligan",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof3",
+            "name": "Lyle Keesee",
+            "coursDesires": [
+                "GEO6628-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        }
+    ],
+    "coursDisponibles": [
+        {
+            "id": "GEO6628-40",
+            "sigle": "GEO6628",
+            "jour": "mardi",
+            "periode": "PM"
+        },
+        {
+            "id": "BIF7062-40",
+            "sigle": "BIF7062",
+            "jour": "vendredi",
+            "periode": "PM"
+        },
+        {
+            "id": "INF7242-40",
+            "sigle": "INF7242",
+            "jour": "vendredi",
+            "periode": "PM"
+        },
+        {
+            "id": "GEO1200-40",
+            "sigle": "GEO1200",
+            "jour": "samedi",
+            "periode": "PM"
+        }
+    ]
+}

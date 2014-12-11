@@ -7,7 +7,7 @@ var data = require('./data_generateur.js').data;
 
 // Global vars
 var array = []; // Utile pour fonction helpers cours().
-var index = 14; // Utile pour fonction helpers cours().
+var index = 100; // Utile pour fonction helpers cours().
 var index_cours = 0; // Utile pour fonctions helpers id_cours() et sigle().
 
 // Helpers
