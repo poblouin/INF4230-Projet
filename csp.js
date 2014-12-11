@@ -34,10 +34,9 @@ var csp = {};
 // TODO: Effacer ceci avant la remise quand front-end sera 100% fonctionnel.
 //csp = require('./generateur/generateur_hard.js').csp; // Uncomment pour utiliser le générateur.
 
-// OU
-var fs = require('fs');   // Uncomment ces 3 lignes pour utiliser les fichiers tests csp.json ou csp2.json qui sont 2 problème solvable généré par le générateur
-var json = fs.readFileSync('./test/csp_hard_100.json', {encoding: 'utf8'});
-csp = JSON.parse(json);
+/*var fs = require('fs');   // Uncomment ces 3 lignes pour utiliser les fichiers tests csp.json ou csp2.json qui sont 2 problème solvable généré par le générateur
+var json = fs.readFileSync('./test/csp_hard_4.json', {encoding: 'utf8'});
+csp = JSON.parse(json);*/
 
 // =================================================
 //              Section des algorithmes
@@ -384,8 +383,8 @@ function validerMaxCours(professeurs) {
 
 // Tests!
 //debugger;
-var test = search(csp);
-console.log(test);
+/*var test = search(csp);
+console.log(test);*/
 
 exports.search = function (cspSend){
 	csp = cspSend;
