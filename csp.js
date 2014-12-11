@@ -31,11 +31,6 @@ CHARGE_DE_COURS = 1;
 
 var csp = {};
 
-// TODO : Je laisse ceci pour sortir les stats ce soir.
-/*var fs = require('fs');   // Uncomment ces 3 lignes pour utiliser les fichiers tests csp.json ou csp2.json qui sont 2 problème solvable généré par le générateur
-var json = fs.readFileSync('./test/csp_hard_4.json', {encoding: 'utf8'});
-csp = JSON.parse(json);*/
-
 // =================================================
 //              Section des algorithmes
 // =================================================
@@ -370,11 +365,6 @@ function validerMaxCours(professeurs) {
     }
     return true;
 };
-
-// Tests!
-//debugger;
-/*var test = search(csp);
-console.log(test);*/
 
 exports.search = function (cspSend){
 	csp = cspSend;
