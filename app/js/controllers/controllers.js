@@ -22,6 +22,84 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 						"difficile-13","difficile-14","difficile-15","difficile-100"];
 	$scope.algoChx = ["AC3"]
 	
+	$scope.tests = [{
+						"nom":"csp_easy_2.json",
+						"temps":"0m0.054s",
+						"memoire":"N/A",
+					},{
+						"nom":"csp_moyen_1.json",
+						"temps":"0m0.287s",
+						"memoire":"32.92",
+					},{	
+						"nom":"csp_hard_10.json",
+						"temps":"0m1.682s",
+						"memoire":"13.38",
+					},{	
+						"nom":"csp_hard_11.json",
+						"temps":"0m8.664s",
+						"memoire":"17.75",
+					},{	
+						"nom":"csp_hard_12.json",
+						"temps":"0m50.638s",
+						"memoire":"26.45",
+					},{	
+						"nom":"csp_hard_13.json",
+						"temps":"4m50.808s",
+						"memoire":"44.68",
+					},{	
+						"nom":"csp_hard_14.json",
+						"temps":"47m56.080s",
+						"memoire":"48.83",
+					},{	
+						"nom":"csp_hard_15.json",
+						"temps":"227m33.507s",
+						"memoire":"48.91",
+					},{	
+						"nom":"csp_hard_100.json",
+						"temps":"N/A",
+						"memoire":"N/A",
+					}];
+					
+	$scope.testsAc3 = [{
+						"nom":"csp_easy_2.json",
+						"temps":"0m0.057s",
+						"memoire":"N/A",
+					},{
+						"nom":"csp_moyen_1.json",
+						"temps":"0m0.522s",
+						"memoire":"30.09",
+					},{	
+						"nom":"csp_hard_10.json",
+						"temps":"0m0.059s",
+						"memoire":"N/A",
+					},{	
+						"nom":"csp_hard_11.json",
+						"temps":"0m0.059s",
+						"memoire":"N/A",
+					},{	
+						"nom":"csp_hard_12.json",
+						"temps":"0m0.055s",
+						"memoire":"N/A",
+					},{	
+						"nom":"csp_hard_13.json",
+						"temps":"0m0.061s",
+						"memoire":"N/A",
+					},{	
+						"nom":"csp_hard_14.json",
+						"temps":"0m0.061s",
+						"memoire":"N/A",
+					},{	
+						"nom":"csp_hard_15.json",
+						"temps":"0m0.063s",
+						"memoire":"9.01",
+					},{	
+						"nom":"csp_hard_100.json",
+						"temps":"0m6.635s",
+						"memoire":"18.10",
+					}];
+
+
+	
 	$scope.getInfo = function(coursId){
 		for(var i = 0; i < $scope.cours.length; i++){
 			if($scope.cours[i].id == coursId) {
