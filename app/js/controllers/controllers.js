@@ -11,11 +11,16 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 	$scope.nombreCoursADistribue = 0;
 	$scope.coursNonAttribues = [];
 	$scope.cspChoisi = false;
+	$scope.loading = false;	
 	$scope.cacher = false;
+	$scope.ac3 = false;
 	$scope.csp = {};
 	$scope.grilleHoraire;
-	$scope.choixCsp = [1,2,3,4];
-	$scope.algoChx = ["backtrackingSearch", "Hill climbing", "AC3"]
+	$scope.choixType = ["facile-1", "facile-2",
+						"moyen-1","moyen-2",
+						"difficile-4","difficile-10","difficile-11","difficile-12",
+						"difficile-13","difficile-14","difficile-15","difficile-100"];
+	$scope.algoChx = ["AC3"]
 	
 	$scope.getInfo = function(coursId){
 		for(var i = 0; i < $scope.cours.length; i++){
@@ -27,7 +32,7 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 	}
 	
 	$scope.algorith = function(algoId, check){
-		$scope.csp[algoId] = check;
+		$scope.ac3 = check;
 	}
 	
 	var enlever = function(coursEnleve) {
@@ -47,10 +52,11 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 		$scope.nombreCoursADistribue = coursADistribuer;
 	}
 	
-	$scope.getCSP = function(index){
-		if(index){
+	$scope.getCSP = function(choix){
+		if(choix){
 			$scope.cspChoisi=true
-			$http.get('/api/CSPs/' + parseInt(index)).
+			var param = choix;
+			$http.get('/api/CSPs/'+ param).
 			success(function(data, status, headers, config) {
 				$scope.genererBool=false;			
 				$scope.csp = data;
@@ -66,6 +72,8 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 	}
 						
 	$scope.generer = function(){
+		$scope.loading = true;
+		$scope.csp["AC3"] = $scope.ac3;
 		$http
 		({	
 			method: 'post',
@@ -77,7 +85,8 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 		}).
 		success(function(data, status, headers, config) {
 				$http.get('/api/CSP').
-				success(function(data, status, headers, config) {	
+				success(function(data, status, headers, config) {
+					$scope.loading = false;				
 					$scope.genererBool=true;
 					$scope.grilleHoraire = data;
 				}).

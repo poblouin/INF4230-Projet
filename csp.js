@@ -366,10 +366,10 @@ function validerMaxCours(professeurs) {
     return true;
 };
 
-exports.search = function (cspSend){
+exports.search = function (cspSend, ac3){
 	csp = cspSend;
 	var start = new Date().getTime();
-	var ret = search(csp);
+	var ret = search(csp, ac3);
 	ret.tempsExecution = new Date()-start;
 	console.log("temps d'execution: " + ret.tempsExecution + "ms");
     return ret;

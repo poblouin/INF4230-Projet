@@ -1,0 +1,259 @@
+{
+    "professeurs": [
+        {
+            "id": "prof0",
+            "name": "Leanne Flinn",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40",
+                "GEO1200-40",
+                "PHY4841-40",
+                "MET9666-40",
+                "MET2611-10",
+                "INF9805-10",
+                "FAR8034-30",
+                "CHI4283-20",
+                "INF7894-10"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof1",
+            "name": "Edward Young",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40",
+                "GEO1200-40",
+                "PHY4841-40",
+                "MET9666-40",
+                "MET2611-10",
+                "INF9805-10",
+                "FAR8034-30",
+                "CHI4283-20"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof2",
+            "name": "Haydee Milligan",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40",
+                "GEO1200-40",
+                "PHY4841-40",
+                "MET9666-40",
+                "MET2611-10",
+                "INF9805-10",
+                "FAR8034-30"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof3",
+            "name": "Lyle Keesee",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40",
+                "GEO1200-40",
+                "PHY4841-40",
+                "MET9666-40",
+                "MET2611-10",
+                "INF9805-10"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof4",
+            "name": "Shea Mercer",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40",
+                "GEO1200-40",
+                "PHY4841-40",
+                "MET9666-40",
+                "MET2611-10"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof5",
+            "name": "Curtis Chapman",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40",
+                "GEO1200-40",
+                "PHY4841-40",
+                "MET9666-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof6",
+            "name": "Roselyn Zobel",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40",
+                "GEO1200-40",
+                "PHY4841-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof7",
+            "name": "Marcus Carter",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40",
+                "GEO1200-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof8",
+            "name": "Lyn Pettey",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40",
+                "INF7242-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof9",
+            "name": "Lloyd Starck",
+            "coursDesires": [
+                "GEO6628-40",
+                "BIF7062-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        },
+        {
+            "id": "prof10",
+            "name": "Isabelle Raymond",
+            "coursDesires": [
+                "GEO6628-40"
+            ],
+            "niveau": 2,
+            "coursSessionDerniere": [],
+            "mauvaiseEvaluation": [],
+            "nombreCoursDesires": 1,
+            "nombreCoursAssignes": 0
+        }
+    ],
+    "coursDisponibles": [
+        {
+            "id": "GEO6628-40",
+            "sigle": "GEO6628",
+            "jour": "lundi",
+            "periode": "AM"
+        },
+        {
+            "id": "BIF7062-40",
+            "sigle": "BIF7062",
+            "jour": "lundi",
+            "periode": "SOIR"
+        },
+        {
+            "id": "INF7242-40",
+            "sigle": "INF7242",
+            "jour": "lundi",
+            "periode": "AM"
+        },
+        {
+            "id": "GEO1200-40",
+            "sigle": "GEO1200",
+            "jour": "lundi",
+            "periode": "AM"
+        },
+        {
+            "id": "PHY4841-40",
+            "sigle": "PHY4841",
+            "jour": "mercredi",
+            "periode": "AM"
+        },
+        {
+            "id": "MET9666-40",
+            "sigle": "MET9666",
+            "jour": "mercredi",
+            "periode": "SOIR"
+        },
+        {
+            "id": "MET2611-10",
+            "sigle": "MET2611",
+            "jour": "mercredi",
+            "periode": "SOIR"
+        },
+        {
+            "id": "INF9805-10",
+            "sigle": "INF9805",
+            "jour": "jeudi",
+            "periode": "PM"
+        },
+        {
+            "id": "FAR8034-30",
+            "sigle": "FAR8034",
+            "jour": "mardi",
+            "periode": "AM"
+        },
+        {
+            "id": "CHI4283-20",
+            "sigle": "CHI4283",
+            "jour": "mardi",
+            "periode": "PM"
+        },
+        {
+            "id": "INF7894-10",
+            "sigle": "INF7894",
+            "jour": "samedi",
+            "periode": "PM"
+        }
+    ]
+}

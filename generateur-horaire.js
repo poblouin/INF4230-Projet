@@ -11,20 +11,21 @@ exports.postCSP = function(req, res) {
 //Récupère le module de csp et fait appel à la fonction search
 //Retourne les json résultant du csp.
 exports.getGenerer = function(req, res) {	
-	var CSPjson = cspModule.search(csp);
+	var ac3 = csp["AC3"] ? csp["AC3"] : false;
+	var CSPjson = cspModule.search(csp, ac3);
 	res.send(CSPjson);
 }
 
 //Récupère le module de csp et fait appel à la fonction search
 //Retourne les json résultant du csp.
 exports.getCSPIndex = function(req, res) {
-	var index = req.params.index;
+	var choix = req.params.choix;
+	var cspUrl = choix.split('-')
 	
-	var cours = JSON.stringify(require('./data/csp'+index+'/cours.json'));
-	var professeur = JSON.stringify(require('./data/csp'+index+'/professeur.json'));
+	console.log(cspUrl[0] + "," + cspUrl[1]);
 	
-	csp.professeurs = JSON.parse(professeur);
-	csp.coursDisponibles = JSON.parse(cours);
+	var cspString = JSON.stringify(require('./data/csp_'+cspUrl[0]+'/csp_'+cspUrl[0]+'_'+cspUrl[1]+'.json'));
+	var csp = JSON.parse(cspString);
 	res.send(csp);
 }
 

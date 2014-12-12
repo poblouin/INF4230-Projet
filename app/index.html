@@ -37,7 +37,9 @@
     </nav>
 	
 	<div class="container">
-		Choisir le csp : <select ng-click="getCSP(choix);" ng-model="choix" data-ng-options="choix for choix in choixCsp"></select>
+		Choisir le csp : 	<select ng-click="getCSP(choix);" ng-model="choix" data-ng-options="choix for choix in choixType">
+								<option value="">-- Difficulté --</option>
+							</select>
 		<br/>
 		Nombre d'employé : {{professeurs.length}}
 		<br/>
@@ -57,7 +59,7 @@
 				<th>Mauvaise évaluation</th>
 			</tr>
 			<tr ng-repeat="professeur in professeurs | orderBy:ordre">
-				<td>{{professeur.nom}}</td>
+				<td>{{professeur.name}}</td>
 				<td>{{professeur.niveau==3 ? "Directeur" : professeur.niveau==2 ? "Professeur" : "Chargé de cours"}}</td>
 				<td>
 					<span 	ng-if="professeur.coursSessionDerniere.length > 0" 
@@ -67,11 +69,6 @@
 				<td>
 					<span ng-repeat="coursDesire in professeur.coursDesires">{{coursDesire}}{{$last ? ".":", "}}</span>
 				</td>
-				<!--<td>
-					<span>
-						<select data-ng-options="cours.sigle for cours in cours" data-ng-model="sigle" ng-change="professeur.coursDesires.push(sigle.sigle);"></select>
-					<span/>
-				</td>-->
 				<td>
 					{{professeur.nombreCoursDesires}}
 					<button ng-if="professeur.nombreCoursDesires<professeur.coursDesires.length" class="glyphicon glyphicon-plus" ng-click="professeur.nombreCoursDesires = professeur.nombreCoursDesires+1; nombreCoursADistribuer();" />
@@ -90,6 +87,7 @@
 			<input type="checkbox" ng-click="algorith(algo, check);" ng-model="check"/>{{algo}}
 		</span>
 		
+		<span ng-show="loading"><img src="image/spinner.gif"></span>
 		<div ng-if="genererBool">
 			Temps d'exécution : {{grilleHoraire.tempsExecution}}ms
 			<br/>
@@ -113,7 +111,7 @@
 					<th>Cours assigné</th>
 				</tr>
 				<tr ng-repeat="professeur in professeurs | orderBy:tri" ng-style="grilleHoraire[professeur.id].length == professeur.nombreCoursDesires ? {'color':'black'} : {'color':'red'}">
-					<td>{{professeur.nom}}</td>
+					<td>{{professeur.name}}</td>
 					<td>{{professeur.niveau==3 ? "Directeur" : professeur.niveau==2 ? "Professeur" : "Chargé de cours"}}</td>
 					<td><b>{{grilleHoraire[professeur.id].length}}/{{professeur.nombreCoursDesires}}</b></td>
 					<td>

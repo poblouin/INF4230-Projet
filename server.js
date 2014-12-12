@@ -26,7 +26,7 @@ var api = express();
 //Les services offerts
 api.post("/createCSP", generateurHoraire.postCSP);
 api.get("/CSP", generateurHoraire.getGenerer);
-api.get("/CSPs/:index", generateurHoraire.getCSPIndex);
+api.get("/CSPs/:choix", generateurHoraire.getCSPIndex);
 
 app.use(bodyParser({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb'}));
