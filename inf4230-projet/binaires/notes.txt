@@ -1,1 +1,2 @@
-Ici, on doit mentionner que notre projet n'utilise aucun fichier binaire.
+Notre projet ne contient aucun fichier binaire. Veuillez vous référez au fichier
+'lisezmoi.pdf' du répertoire racine afin de connaître comment exécuter l'application.
