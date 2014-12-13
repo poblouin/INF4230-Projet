@@ -1,0 +1,1 @@
+Ici, on doit mentionner que notre projet n'utilise aucun fichier binaire.
