@@ -23,7 +23,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="{{gen}}"><a ng-click="gen='active'; res=''" href="">Générateur</a></li>
-            <li class="{{res}}"><a ng-click="gen=''; res='active'" href="">Résultat</a></li>
+            <li class="{{res}}"><a ng-click="gen=''; res='active'" href="">Résultats</a></li>
           </ul>
         </div> 
       </div>
@@ -132,10 +132,17 @@
 
 	<div ng-if="res=='active'" class="container">
 	
-	<h3>Test sans AC3</h3>
+		<h3>Résultats</h3>
 		<table class="table table-bordered">
 			<tr>
+				<th></th>
+				<th colspan="2">Test sans AC3</th>
+				<th colspan="2">Test avec AC3</th>
+			</tr>
+			<tr>
 				<th>Fichier Test</th>
+				<th>Temps d’exécution</th>
+				<th>Mémoire utilisée (MB)</th>
 				<th>Temps d’exécution</th>
 				<th>Mémoire utilisée (MB)</th>
 			</tr>
@@ -143,20 +150,8 @@
 				<td>{{test.nom}}</td>
 				<td>{{test.temps}}</td>
 				<td>{{test.memoire}}</td>
-			</tr>
-		</table>
-		
-		<h3>Test avec AC3</h3>
-		<table class="table table-bordered">
-			<tr>
-				<th>Fichier Test</th>
-				<th>Temps d’exécution</th>
-				<th>Mémoire utilisée (MB)</th>
-			</tr>
-			<tr ng-repeat="testAc3 in testsAc3">
-				<td>{{testAc3.nom}}</td>
-				<td>{{testAc3.temps}}</td>
-				<td>{{testAc3.memoire}}</td>
+				<td>{{test.tempsAc3}}</td>
+				<td>{{test.memoireAc3}}</td>
 			</tr>
 		</table>
 	</div>

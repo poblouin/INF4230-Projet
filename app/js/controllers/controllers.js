@@ -26,76 +26,56 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 						"nom":"csp_easy_2.json",
 						"temps":"0m0.054s",
 						"memoire":"N/A",
+						"tempsAc3":"0m0.057s",
+						"memoireAc3":"N/A",
 					},{
 						"nom":"csp_moyen_1.json",
 						"temps":"0m0.287s",
 						"memoire":"32.92",
+						"tempsAc3":"0m0.522s",
+						"memoireAc3":"30.09",
 					},{	
 						"nom":"csp_hard_10.json",
 						"temps":"0m1.682s",
 						"memoire":"13.38",
+						"tempsAc3":"0m0.059s",
+						"memoireAc3":"N/A",
 					},{	
 						"nom":"csp_hard_11.json",
 						"temps":"0m8.664s",
 						"memoire":"17.75",
+						"tempsAc3":"0m0.059s",
+						"memoireAc3":"N/A",
 					},{	
 						"nom":"csp_hard_12.json",
 						"temps":"0m50.638s",
 						"memoire":"26.45",
+						"tempsAc3":"0m0.055s",
+						"memoireAc3":"N/A",
 					},{	
 						"nom":"csp_hard_13.json",
 						"temps":"4m50.808s",
 						"memoire":"44.68",
+						"tempsAc3":"0m0.061s",
+						"memoireAc3":"N/A",
 					},{	
 						"nom":"csp_hard_14.json",
 						"temps":"47m56.080s",
 						"memoire":"48.83",
+						"tempsAc3":"0m0.061s",
+						"memoireAc3":"N/A",
 					},{	
 						"nom":"csp_hard_15.json",
 						"temps":"227m33.507s",
 						"memoire":"48.91",
+						"tempsAc3":"0m0.063s",
+						"memoireAc3":"9.01",
 					},{	
 						"nom":"csp_hard_100.json",
 						"temps":"N/A",
 						"memoire":"N/A",
-					}];
-					
-	$scope.testsAc3 = [{
-						"nom":"csp_easy_2.json",
-						"temps":"0m0.057s",
-						"memoire":"N/A",
-					},{
-						"nom":"csp_moyen_1.json",
-						"temps":"0m0.522s",
-						"memoire":"30.09",
-					},{	
-						"nom":"csp_hard_10.json",
-						"temps":"0m0.059s",
-						"memoire":"N/A",
-					},{	
-						"nom":"csp_hard_11.json",
-						"temps":"0m0.059s",
-						"memoire":"N/A",
-					},{	
-						"nom":"csp_hard_12.json",
-						"temps":"0m0.055s",
-						"memoire":"N/A",
-					},{	
-						"nom":"csp_hard_13.json",
-						"temps":"0m0.061s",
-						"memoire":"N/A",
-					},{	
-						"nom":"csp_hard_14.json",
-						"temps":"0m0.061s",
-						"memoire":"N/A",
-					},{	
-						"nom":"csp_hard_15.json",
-						"temps":"0m0.063s",
-						"memoire":"9.01",
-					},{	
-						"nom":"csp_hard_100.json",
-						"temps":"0m6.635s",
-						"memoire":"18.10",
+						"tempsAc3":"0m6.635s",
+						"memoireAc3":"18.10",
 					}];
 
 
