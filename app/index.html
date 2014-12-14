@@ -81,6 +81,7 @@
 		</span>
 		
 		<span ng-show="loading"><img src="image/spinner.gif"></span>
+		<h3 ng-if="erreur" style="color:red">Problème insolvable</h3>
 		<div ng-if="genererBool">
 			Temps d'exécution : {{grilleHoraire.tempsExecution}}ms
 			<br/>

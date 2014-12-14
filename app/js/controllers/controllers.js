@@ -139,7 +139,8 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 			//params: {csp: $scope.grilleHoraire},
 			data: {
                         csp: $scope.csp
-                    }
+                    },
+			timeout: 60000
 		}).
 		success(function(data, status, headers, config) {
 				$http.get('/api/CSP').
@@ -150,6 +151,9 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 				}).
 				error(function(data, status, headers, config) {
 					console.log("ERREUR");
+					$scope.loading = false;
+					$scope.genererBool = false;
+					$scope.erreur = true;s
 				});
 		}).
 		error(function(data, status, headers, config) {
