@@ -131,6 +131,8 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 						
 	$scope.generer = function(){
 		$scope.loading = true;
+		$scope.erreur = false;
+		$scope.genererBool=false;
 		$scope.csp["AC3"] = $scope.ac3;
 		$http
 		({	
@@ -153,7 +155,7 @@ horaireControllers.controller('GenerationHorairesCtrl', ['$scope', '$http',
 					console.log("ERREUR");
 					$scope.loading = false;
 					$scope.genererBool = false;
-					$scope.erreur = true;s
+					$scope.erreur = true;
 				});
 		}).
 		error(function(data, status, headers, config) {
